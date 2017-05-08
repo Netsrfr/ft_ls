@@ -18,11 +18,14 @@ void	*ft_memalloc(size_t size)
 	char	*buffer;
 	size_t	i;
 
-	i = -1;
+	i = 0;
 	if (!(mem = (void*)malloc(size)))
 		return (0);
 	buffer = (char*)mem;
-	while ((i = i + 1) < size)
+	while (i < size)
+	{
 		buffer[i] = 0;
+		i++;
+	}
 	return (mem);
 }

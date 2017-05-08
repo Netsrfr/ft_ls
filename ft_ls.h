@@ -32,6 +32,7 @@ typedef struct			s_flag
 typedef struct			s_cont
 {
 	char	*file;
+	size_t	len;
 	int		dir;
 }						t_cont;
 

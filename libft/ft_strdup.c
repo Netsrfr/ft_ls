@@ -35,13 +35,18 @@ char	*ft_strdup(const char *s1)
 {
 	char	*result;
 	size_t	i;
+	size_t	len;
 
-	i = -1;
-	if (!(result = (char *)ft_memalloc(sizeof(char) * (ft_strlen(s1) + 1))))
+	i = 0;
+	len = ft_strlen(s1);
+	if (!(result = (char *)ft_memalloc(sizeof(char) * (len + 1))))
 		return (0);
 	else
-		while ((i = i + 1) < ft_strlen(s1))
+		while (i < len)
+		{
 			result[i] = s1[i];
+			i++;
+		}
 	result[i] = '\0';
 	return (result);
 }

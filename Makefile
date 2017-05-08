@@ -26,7 +26,7 @@ C_FLAGS = -Wall -Werror -Wextra
 
 .PHONY: all library libft printf gnl test clean cleanmlx fclean re
 
-all: library $(FDF)
+all: library $(LS)
 
 library: libft printf gnl $(LIBRARY)
 
@@ -48,7 +48,7 @@ gnl: $(GNL)
 $(GNL):
 	@make -C ./libraries/get_next_line
 
-$(FDF):
+$(LS):
 	@gcc $(C_FLAGS) $(LIBLINK) $(SRCS) -o ft_ls
 
 test: fclean library
@@ -63,7 +63,7 @@ clean:
 	@make clean -C ./libraries/get_next_line
 
 fclean: clean
-	@rm -f $(PUSH_SWAP) $(CHECKER) $(LIBRARY) a.out test
+	@rm -f $(PUSH_SWAP) $(CHECKER) $(LIBRARY) a.out ft_ls
 	@make fclean -C ./libft
 	@make fclean -C ./libraries/ft_printf
 	@make fclean -C ./libraries/get_next_line
