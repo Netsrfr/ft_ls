@@ -2,6 +2,22 @@
 #include <sys/stat.h>
 #include "ft_ls.h"
 
+void	ft_sort(char ***array, int i, int size)
+{
+	char *temp;
+
+	if(ft_strcmp((*array)[i], (*array)[i + 1]) > 0)
+	{
+		temp = ft_strdup((*array)[i]);
+		(*array)[i] = ft_strdup((*array)[i + 1]);
+		(*array)[i + 1] = ft_strdup(temp);
+		free(temp);
+		ft_sort(array, 0, size);
+	}
+	if (i + 1 < size - 1)
+		ft_sort(array, i + 1, size);
+}
+
 size_t ft_count_files(char *argv)
 {
 	DIR	*dir;
