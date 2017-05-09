@@ -2,6 +2,22 @@
 #include <sys/stat.h>
 #include "ft_ls.h"
 
+void	ft_rsort(char ***array, int i, int size)
+{
+	char *temp;
+
+	if(ft_strcmp((*array)[i], (*array)[i + 1]) < 0)
+	{
+		temp = ft_strdup((*array)[i + 1]);
+		(*array)[i + 1] = ft_strdup((*array)[i]);
+		(*array)[i] = ft_strdup(temp);
+		free(temp);
+		ft_rsort(array, 0, size);
+	}
+	if (i + 1 < size - 1)
+		ft_rsort(array, i + 1, size);
+}
+
 void	ft_sort(char ***array, int i, int size)
 {
 	char *temp;
