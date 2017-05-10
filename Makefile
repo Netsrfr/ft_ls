@@ -17,8 +17,8 @@ C_FILES = ft_ls.c
 LIBFT		=	./libft/libft.a
 PRINTF		=	./libraries/ft_printf/libftprintf.a
 GNL			=	./libraries/get_next_line/libgnl.a
-LIBLINK		=	-L ./libraries -lfdf
-LIBRARY		=	./libraries/libfdf.a
+LIBLINK		=	-L ./libraries -lls
+LIBRARY		=	./libraries/libls.a
 
 SRCS = $(C_FILES)
 
@@ -31,7 +31,7 @@ all: library $(LS)
 library: libft printf gnl $(LIBRARY)
 
 $(LIBRARY):
-	@libtool -static -o ./libraries/libfdf.a $(LIBFT) $(PRINTF) $(GNL)
+	@libtool -static -o ./libraries/libls.a $(LIBFT) $(PRINTF) $(GNL)
 
 libft: $(LIBFT)
 
