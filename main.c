@@ -37,19 +37,19 @@ int	ft_parse_flags(char *arg)
 	int	i;
 
 	i = 1;
-	flags.flag++;
+	g_flags.flag++;
 	while(arg[i])
 	{
-		if (arg[i] == 'l' && flags.l == 0)
-			flags.l = 1;
-		else if (arg[i] == 'R'&& flags.R == 0)
-			flags.R = 1;
-		else if (arg[i] == 'a'&& flags.a == 0)
-			flags.a = 1;
-		else if (arg[i] == 'r'&& flags.r == 0)
-			flags.r = 1;
-		else if (arg[i] == 't'&& flags.t == 0)
-			flags.t = 1;
+		if (arg[i] == 'l' && g_flags.l == 0)
+			g_flags.l = 1;
+		else if (arg[i] == 'R'&& g_flags.R == 0)
+			g_flags.R = 1;
+		else if (arg[i] == 'a'&& g_flags.a == 0)
+			g_flags.a = 1;
+		else if (arg[i] == 'r'&& g_flags.r == 0)
+			g_flags.r = 1;
+		else if (arg[i] == 't'&& g_flags.t == 0)
+			g_flags.t = 1;
 		i++;
 	}
 	return (0);
@@ -65,16 +65,16 @@ int	ft_get_arguments(char **argv, int *argc)
 		i++;
 	}
 	i = 1;
-	if (flags.flag != 0)
+	if (g_flags.flag != 0)
 	{
-		while (i + flags.flag < *argc)
+		while (i + g_flags.flag < *argc)
 		{
-			argv[i] = ft_strdup(argv[i + flags.flag]);
+			argv[i] = ft_strdup(argv[i + g_flags.flag]);
 			i++;
 		}
 		argv[i + 1] = 0;
 	}
-	*argc -= flags.flag;
+	*argc -= g_flags.flag;
 	return (1);
 }
 
@@ -97,19 +97,19 @@ t_cont	*ft_init_contents(char *argv)
 
 void	ft_init_flags(void)
 {
-	flags.flag = 0;
-	flags.l = 0;
-	flags.R = 0;
-	flags.a = 0;
-	flags.r = 0;
-	flags.t = 0;
+	g_flags.flag = 0;
+	g_flags.l = 0;
+	g_flags.R = 0;
+	g_flags.a = 0;
+	g_flags.r = 0;
+	g_flags.t = 0;
 }
 
 void	ft_clear_invalid(char **argv, int *argc, int i)
 {
 	perror(argv[i]);
-	//if (*argc == 2)
-	//	exit (0);
+	if (*argc == 2)
+		exit (0);
 	while (i + 1 < *argc)
 	{
 		argv[i] = ft_strdup(argv[i + 1]);
@@ -119,47 +119,44 @@ void	ft_clear_invalid(char **argv, int *argc, int i)
 	*argc = *argc - 1;
 }
 
-void	ft_args(char **argv, int argc)
+void	ft_args(char **argv, int *argc)
 {
 	struct stat	*test;
 	int			i;
 
 	i = 1;
 	test = ft_memalloc(sizeof(struct stat) * 10);
-	ft_get_arguments(argv, &argc);
-	while (i < argc)
+	ft_get_arguments(argv, argc);
+	while (i < *argc)
 	{
 		if (stat(argv[i], test) == -1)
 		{
-			ft_clear_invalid(argv, &argc, i);
+			ft_clear_invalid(argv, argc, i);
 			i--;
 		}
 		i++;
 	}
-//	if((*dir      = opendir(argv[1])) != '\0')
-//		*contents = ft_init_contents(argv[1]);
-//	else
-//		printf("file = %s\n", argv[1]);
-
+	if (*argc > 2)
+		g_flags.r == 1 ? ft_rsort(&argv, 1, *argc) : ft_sort(&argv, 1, *argc);
 }
 
-void	ft_ascii_rsort(t_cont **contents, int i, int size)
+void	ft_rsort(char ***argv, int i, int size)
 {
 	char *temp;
 
-	if(ft_strcmp((*contents)[i].file, (*contents)[i + 1].file) < 0)
+	if(ft_strcmp((*argv)[i], (*argv)[i + 1]) < 0)
 	{
-		temp = ft_strdup((*contents)[i + 1].file);
-		(*contents)[i + 1].file = ft_strdup((*contents)[i].file);
-		(*contents)[i].file = ft_strdup(temp);
+		temp = ft_strdup((*argv)[i + 1]);
+		(*argv)[i + 1] = ft_strdup((*argv)[i]);
+		(*argv)[i] = ft_strdup(temp);
 		free(temp);
-		ft_ascii_rsort(contents, 0, size);
+		ft_rsort(argv, 1, size);
 	}
 	if (i + 1 < size - 1)
-		ft_ascii_rsort(contents, i + 1, size);
+		ft_rsort(argv, i + 1, size);
 }
 
-void	ft_ascii_sort(char ***argv, int i, int size)
+void	ft_sort(char ***argv, int i, int size)
 {
 	char *temp;
 
@@ -169,10 +166,10 @@ void	ft_ascii_sort(char ***argv, int i, int size)
 		(*argv)[i] = ft_strdup((*argv)[i + 1]);
 		(*argv)[i + 1] = ft_strdup(temp);
 		free(temp);
-		ft_ascii_sort(argv, 1, size);
+		ft_sort(argv, 1, size);
 	}
 	if (i + 1 < size - 1)
-		ft_ascii_sort(argv, i + 1, size);
+		ft_sort(argv, i + 1, size);
 }
 
 void	ft_uid_TEST(t_cont *contents)
@@ -210,54 +207,11 @@ char	**ft_init_test(char *argv)
 
 
 
-void	ft_directories(char **argv, int argc)
+void	ft_next_arg(char **argv, int argc)
 {
-	int		i;
-	int		j;
-	int		count;
-	DIR		*dir;
-	struct	dirent *directory;
-	t_cont	*contents;
-	char	**test;
-	char	**directories;
+	int	i;
 
 	i = 1;
-	count = 0;
-	dir = ft_memalloc(sizeof(DIR));
-
-	if (ft_strcmp(argv[1], ".") == 0 || ft_strcmp(argv[1], "..") == 0)
-		printf("%s\n", argv[1]);
-	else if((dir = opendir(ft_add_path(argv))) != '\0')
-	{
-		test = ft_init_test(ft_add_path(argv));
-		printf("%s:\n", ft_add_path(argv));
-		if (strcmp(argv[0], "./ft_ls") == 0)
-		{
-			test[0] = ft_strjoin(argv[1], "/");
-		}
-		else
-		{
-			test[0] = ft_strjoin(argv[0], argv[1]);
-			test[0] = ft_strjoin(test[0], "/");
-		}
-		while (dir != NULL)
-		{
-			if((directory = readdir(dir)) != NULL)
-			{
-				test[i] = ft_strdup(directory->d_name);
-				count++;
-				i++;
-			}
-			else
-				break;
-		}
-		main((count + 1), test);
-		closedir(dir);
-	}
-	else
-	{
-		printf("%s\n", argv[1]);
-	}
 	if (argc > 3)
 	{
 		while (i + 1 < argc)
@@ -265,29 +219,109 @@ void	ft_directories(char **argv, int argc)
 			argv[i] = ft_strdup(argv[i + 1]);
 			i++;
 		}
-		main((argc - 1), argv);
+		ft_parse_contents(argv, (argc - 1));
 	}
 	if (argc == 3)
 	{
 		argv[1] = ft_strdup(argv[2]);
-		main((argc - 1), argv);
+		ft_parse_contents(argv, (argc - 1));
+	}
+}
+
+int	ft_hidden(char **argv, int argc)
+{
+	if (argv[1][0] == '.')
+	{
+		if (g_flags.a == 1)
+		{
+			if (ft_strcmp(argv[1], ".") == 0 || ft_strcmp(argv[1], "..") == 0)
+			{
+				ft_next_arg(argv, argc);
+				return (0);
+			}
+		}
+		else if (g_flags.a == 0)
+		{
+			ft_next_arg(argv, argc);
+			return (0);
+		}
+	}
+	return (1);
+}
+
+void	ft_directories(char **argv, DIR *dir)
+{
+	struct	dirent *directory;
+	char	**test;
+	int		count;
+
+	count = 0;
+	test = ft_init_test(ft_add_path(argv));
+	if (strcmp(argv[0], "./ft_ls") == 0)
+		test[0] = ft_strjoin(argv[1], "/");
+	else
+	{
+		printf("\n%s:\n", ft_add_path(argv));
+		test[0] = ft_strjoin(argv[0], argv[1]);
+		test[0] = ft_strjoin(test[0], "/");
+	}
+	while (dir != NULL)
+	{
+		if((directory = readdir(dir)) != NULL)
+		{
+			test[count + 1] = ft_strdup(directory->d_name);
+			count++;
+		}
+		else
+			break;
+	}
+	g_flags.r == 1 ? ft_rsort(&test, 1, count + 1) : ft_sort(&test, 1, count + 1);
+	main((count + 1), test);
+}
+
+void	ft_parse_contents(char **argv, int argc)
+{
+	DIR		*dir;
+
+	if(ft_hidden(argv, argc) == 0)
+		return ;
+	if((dir = opendir(ft_add_path(argv))) != '\0' && (g_flags.R == 1 \
+ 	|| strcmp(argv[0], "./ft_ls") == 0))
+	{
+		ft_directories(argv, dir);
+		closedir(dir);
+	}
+	ft_next_arg(argv, argc);
+}
+
+void	ft_print_contents(int argc, char **argv)
+{
+	int	i;
+
+	i = 1;
+	while (i < argc)
+	{
+		if (g_flags.a == 1 && argv[i][0] == '.')
+			printf("%s\n", argv[i]);
+		if (argv[i][0] != '.')
+			printf("%s\n", argv[i]);
+		i++;
 	}
 }
 
 int main(int argc, char **argv)
 {
-	DIR		*dir = 0;
-	struct	dirent *directory;
-	int		i;
-	int		j;
-	int		count;
+	int i;
 
-//	if (argc > 2)
-//		ft_ascii_sort(&argv, 1, argc);
-	ft_init_flags();
+	i = 1;
 	if (argc >= 2 && (ft_strcmp(argv[0], "./ft_ls") == 0))
-		ft_args(argv, argc);
-	ft_directories(argv, argc);
+		ft_args(argv, &argc);
+	if (argc >= 2 && (ft_strcmp(argv[0], "./ft_ls") != 0))
+		ft_print_contents(argc, argv);
+	if (argc >= 2)
+	{
+		ft_parse_contents(argv, argc);
+	}
 //	ft_uid_TEST(contents);
 //	while (i < count)
 //	{

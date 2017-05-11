@@ -11,19 +11,17 @@
 /* ************************************************************************** */
 
 #ifndef FT_LS_H
-#define FT_LS_H
-
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include "libft/libft.h"
-#include "libraries/get_next_line/get_next_line.h"
-#include <sys/stat.h>
-#include <dirent.h>
-#include <pwd.h>
-#include <grp.h>
-#include <errno.h>
-
+# define FT_LS_H
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include "libft/libft.h"
+# include "libraries/get_next_line/get_next_line.h"
+# include <sys/stat.h>
+# include <dirent.h>
+# include <pwd.h>
+# include <grp.h>
+# include <errno.h>
 
 typedef struct			s_flag
 {
@@ -33,7 +31,7 @@ typedef struct			s_flag
 	int	a;
 	int	r;
 	int	t;
-}						g_flags;
+}						t_flags;
 
 typedef struct			s_cont
 {
@@ -45,10 +43,16 @@ typedef struct			s_cont
 	struct passwd	pwd;
 }						t_cont;
 
-g_flags flags;
+static t_flags g_flags;
 
-int main(int argc, char **argv);
-char	**ft_init_test(char *argv);
-size_t ft_count_files(char *argv);
+
+int						main(int argc, char **argv);
+char					**ft_init_test(char *argv);
+size_t					ft_count_files(char *argv);
+
+void	ft_sort(char ***argv, int i, int size);
+void	ft_rsort(char ***argv, int i, int size);
+
+void	ft_parse_contents(char **argv, int argc);
 
 #endif

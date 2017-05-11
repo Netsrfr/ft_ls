@@ -85,5 +85,5 @@ set(SOURCE_FILES
         libraries/ft_printf/ft_putwidth.c
         libraries/get_next_line/get_next_line.c
         libraries/get_next_line/get_next_line.h
-        main.c ft_ls.h ft_ls.c)
+        main.c ft_ls.h ft_ls.c temp.c)
 add_executable(ft_ls ${SOURCE_FILES})
