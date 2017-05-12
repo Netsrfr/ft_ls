@@ -22,6 +22,8 @@
 # include <pwd.h>
 # include <grp.h>
 # include <errno.h>
+# include <sys/ioctl.h>
+#include <termios.h>
 
 typedef struct			s_flag
 {
@@ -31,6 +33,9 @@ typedef struct			s_flag
 	int	a;
 	int	r;
 	int	t;
+	int	one;
+	int first;
+	int start;
 }						t_flags;
 
 typedef struct			s_cont
