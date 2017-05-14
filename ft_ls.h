@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include "libft/libft.h"
+# include "libraries/ft_printf/ft_printf.h"
 # include "libraries/get_next_line/get_next_line.h"
 # include <sys/stat.h>
 # include <dirent.h>
@@ -24,6 +25,10 @@
 # include <errno.h>
 # include <sys/ioctl.h>
 #include <termios.h>
+#include <sys/xattr.h>
+#include <sys/acl.h>
+
+
 
 typedef struct			s_flag
 {
@@ -38,15 +43,13 @@ typedef struct			s_flag
 	int start;
 }						t_flags;
 
-typedef struct			s_cont
+typedef struct			s_col
 {
-	char			*file;
-	char			*absolute;
-	size_t			len;
-	int				dir;
-	struct stat		stats;
-	struct passwd	pwd;
-}						t_cont;
+	int		links;
+	size_t	user;
+	size_t	group;
+	int		f_size;
+}						t_col;
 
 static t_flags g_flags;
 

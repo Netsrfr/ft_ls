@@ -80,7 +80,7 @@ char	*ft_flags_precision(char *progress)
 			progress++;
 		}
 		g_fl.precision_v = result;
-		progress = ft_flags(progress);
+		progress = ft_flags(progress, NULL);
 	}
 	return (progress);
 }

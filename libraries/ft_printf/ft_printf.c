@@ -34,11 +34,21 @@ void	flag_init(void)
 	g_fl.z = 0;
 }
 
-char	*ft_flags(char *progress)
+char	*ft_flags_star(char *progress, va_list arguments)
+{
+	g_fl.width = 1;
+	g_fl.width_v = va_arg(arguments, int);
+	progress++;
+	return (progress);
+}
+
+char	*ft_flags(char *progress, va_list arguments)
 {
 	while (PR('+') || PR('-') || PR('#') || PR(' ') || PR('h') || PR('l')
-	|| PR('j') || PR('z') || (*progress >= '0' && *progress <= '9'))
+	|| PR('j') || PR('z') || PR('*') || (*progress >= '0' && *progress <= '9'))
 	{
+		if (*progress == '*')
+			progress = ft_flags_star(progress, arguments);
 		if (*progress >= '1' && *progress <= '9')
 			progress = ft_flags_width(progress);
 		if (*progress == '+')
@@ -72,7 +82,7 @@ int		parser(const char *format, va_list arguments)
 		if (*fmt_ptr == '%')
 		{
 			flag_init();
-			fmt_ptr = ft_flags(++fmt_ptr);
+			fmt_ptr = ft_flags(++fmt_ptr, arguments);
 			fmt_ptr = ft_conversions(arguments, fmt_ptr);
 		}
 		if (g_print)

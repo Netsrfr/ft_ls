@@ -19,7 +19,7 @@ C_FILES = ft_printf.c ft_putwidth.c ft_conversions_alpha.c \
 LIBFT		=	../../libft/libft.a
 LIBLINK		=	-L ../../libft -lft
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra
 
 LIBFT_SRCS = $(addprefix libft/,$(LIBFT))
 

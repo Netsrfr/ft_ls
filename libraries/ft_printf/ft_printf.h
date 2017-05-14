@@ -21,7 +21,7 @@
 # define DEF "\x1b[39m"
 # define WHITE "\x1b[37m"
 
-typedef struct		s_flag
+typedef struct		s_pf_flag
 {
 	int		error;
 	int		precision;
@@ -49,7 +49,7 @@ char				*g_print;
 
 ssize_t				ft_printf(const char *format, ...);
 void				flag_init(void);
-char				*ft_flags(char *progress);
+char				*ft_flags(char *progress, va_list arguments);
 
 char				*ft_flags_plus(char *progress);
 char				*ft_flags_minus(char *progress);
