@@ -19,32 +19,6 @@ size_t ft_count_files(char *argv)
 	return (count);
 }
 
-char *ft_add_path(char **argv)
-{
-	char	*temp;
-
-	if (strcmp(argv[0], "./ft_ls") == 0)
-		temp = ft_strdup(argv[1]);
-	else
-	{
-		temp = ft_strjoin(argv[0], argv[1]);
-	}
-	return (temp);
-}
-
-char *ft_add_path_single(char *argv0, char *argv1)
-{
-	char	*temp;
-
-	if (strcmp(argv0, "./ft_ls") == 0)
-		return (argv1);
-	else
-	{
-		temp = ft_strjoin(argv0, argv1);
-	}
-	return (temp);
-}
-
 int	ft_parse_flags(char *arg)
 {
 	int	i;
@@ -55,7 +29,6 @@ int	ft_parse_flags(char *arg)
 	{
 		if (arg[i] == 'l')
 			g_flags.l   = 1;
-
 		else if (arg[i] == 'R')
 			g_flags.R = 1;
 		else if (arg[i] == 'a')
@@ -71,259 +44,59 @@ int	ft_parse_flags(char *arg)
 	return (0);
 }
 
-int	ft_get_arguments(char **argv, int *argc)
+
+
+
+
+
+
+char	**ft_init_contents(char *argv)
 {
-	int		i;
-	i = 1;
-	while (i < *argc && argv[i][0] == '-')
-	{
-		ft_parse_flags(argv[i]);
-		i++;
-	}
-	i = 1;
-	if (g_flags.flag != 0)
-	{
-		while (i + g_flags.flag < *argc)
-		{
-			argv[i] = ft_strdup(argv[i + g_flags.flag]);
-			i++;
-		}
-		argv[i + 1] = 0;
-	}
-	*argc -= g_flags.flag;
-	g_flags.start = *argc;
-	return (1);
-}
-
-void	ft_init_flags(void)
-{
-	g_flags.flag = 0;
-	g_flags.l = 0;
-	g_flags.R = 0;
-	g_flags.a = 0;
-	g_flags.r = 0;
-	g_flags.t = 0;
-}
-
-void	ft_clear_invalid(char **argv, int *argc, int i)
-{
-	perror(ft_strjoin("ft_ls: ", argv[i]));
-	if (*argc == 2)
-		exit (0);
-	while (i + 1 < *argc)
-	{
-		argv[i] = ft_strdup(argv[i + 1]);
-		i++;
-	}
-	argv[i] = 0;
-	*argc = *argc - 1;
-}
-
-void	ft_args(char **argv, int *argc)
-{
-	struct stat	*stats;
-	int			i;
-
-	i = 1;
-	stats = ft_memalloc(sizeof(struct stat) * 10);
-	ft_get_arguments(argv, argc);
-	while (i < *argc)
-	{
-		if (stat(argv[i], stats) == -1)
-		{
-			ft_clear_invalid(argv, argc, i);
-			i--;
-		}
-		if ((stats->st_mode & S_IRUSR) == 0)
-			if ((stats->st_mode & S_IFMT) == S_IFDIR)
-			{
-				errno = 13;
-				perror(ft_strjoin("ft_ls: ", argv[i]));
-			}
-		i++;
-	}
-	if (*argc > 2)
-		g_flags.r == 1 ? ft_rsort(&argv, 1, *argc) : ft_sort(&argv, 1, *argc);
-}
-
-void	ft_rsort(char ***argv, int i, int size)
-{
-	char *temp;
-
-	if(ft_strcmp((*argv)[i], (*argv)[i + 1]) < 0)
-	{
-		temp = ft_strdup((*argv)[i + 1]);
-		(*argv)[i + 1] = ft_strdup((*argv)[i]);
-		(*argv)[i] = ft_strdup(temp);
-		free(temp);
-		ft_rsort(argv, 1, size);
-	}
-	if (i + 1 < size - 1)
-		ft_rsort(argv, i + 1, size);
-}
-
-void	ft_sort(char ***argv, int i, int size)
-{
-	char *temp;
-
-	if(ft_strcmp((*argv)[i], (*argv)[i + 1]) > 0)
-	{
-		temp = ft_strdup((*argv)[i]);
-		(*argv)[i] = ft_strdup((*argv)[i + 1]);
-		(*argv)[i + 1] = ft_strdup(temp);
-		free(temp);
-		ft_sort(argv, 1, size);
-	}
-	if (i + 1 < size - 1)
-		ft_sort(argv, i + 1, size);
-}
-
-void	ft_uid_TEST(char **argv)
-{
-	struct passwd *uid;
-	struct group	*gid;
-	struct stat		*stats;
-	struct stat		*stats2;
-	ft_printf("irwxu = %u\n", S_IRWXU);
-
-	stats = ft_memalloc(sizeof(struct stat));
-	//ft_printf("file3 = %s\n", contents[26].file);
-	lstat(argv[1], stats);
-	ft_printf("uid = %u\n", stats->st_uid);
-	ft_printf("mode = %u\n", stats->st_mode);
-	ft_printf("irwxu = %u\n", stats->st_mode & S_IRWXU);
-	ft_printf("irusr = %u\n", stats->st_mode & S_IRUSR);
-	ft_printf("iwusr = %u\n", stats->st_mode & S_IWUSR);
-	ft_printf("ixusr = %u\n", stats->st_mode & S_IXUSR);
-	ft_printf("isdir = %u\n", (stats->st_mode & S_IFMT) == S_IFDIR);
-
-
-	uid = getpwuid(stats->st_uid);
-	gid = getgrgid(stats->st_gid);
-	ft_printf("uid = %s\n", uid->pw_name);
-	ft_printf("class = %s\n", uid->pw_class);
-	ft_printf("dir = %s\n", uid->pw_dir);
-	ft_printf("gecos = %s\n", uid->pw_gecos);
-	ft_printf("passwd = %s\n", uid->pw_passwd);
-	ft_printf("shell = %s\n\n", uid->pw_shell);
-	ft_printf("gid = %s\n", gid->gr_name);
-	ft_printf("mem0 = %s\n", gid->gr_mem[0]);
-	//ft_printf("mem1 = %s\n\n", gid->gr_mem[1]);
-}
-
-char	**ft_init_test(char *argv)
-{
-	char	**test;
-	size_t	i;
+	char	**contents;
 	size_t	count;
 
-	i = 0;
 	count = ft_count_files(argv);
-	test = ft_memalloc(sizeof(char*) * count + 1);
-	return (test);
+	contents = ft_memalloc(sizeof(char*) * count + 1);
+	return (contents);
 }
 
 
 
-void	ft_next_arg(char **argv, int argc)
-{
-	int	i;
-
-	i = 1;
-	if (argc > 3)
-	{
-		while (i + 1 < argc)
-		{
-			argv[i] = ft_strdup(argv[i + 1]);
-			i++;
-		}
-		ft_parse_contents(argv, (argc - 1));
-	}
-	if (argc == 3)
-	{
-		argv[1] = ft_strdup(argv[2]);
-		ft_parse_contents(argv, (argc - 1));
-	}
-}
-
-int	ft_hidden(char **argv, int argc)
-{
-	if (argv[1][0] == '.')
-	{
-		if (g_flags.a == 1)
-		{
-			if (ft_strcmp(argv[1], ".") == 0 || ft_strcmp(argv[1], "..") == 0)
-			{
-				ft_next_arg(argv, argc);
-				return (0);
-			}
-		}
-		else if (g_flags.a == 0)
-		{
-			ft_next_arg(argv, argc);
-			return (0);
-		}
-	}
-	return (1);
-}
-
-void	ft_sort_time(char ***argv, int i, int size)
-{
-	char *temp;
-	struct stat	stats;
-	struct stat stats2;
 
 
-
-	if (i + 1 < size)
-	{
-		//printf("TEST\n");
-		lstat(ft_add_path_single((*argv)[0], (*argv)[i]), &stats);
-		lstat(ft_add_path_single((*argv)[0], (*argv)[i + 1]), &stats2);
-		if (stats.st_mtimespec.tv_sec < stats2.st_mtimespec.tv_sec)
-		{
-			temp = ft_strdup((*argv)[i]);
-			(*argv)[i]     = ft_strdup((*argv)[i + 1]);
-			(*argv)[i + 1] = ft_strdup(temp);
-			free(temp);
-			ft_sort_time(argv, 1, size);
-		}
-
-	}
-		if (i + 1 < size - 1)
-			ft_sort_time(argv, i + 1, size);
-
-}
+//void	ft_parse_dir(DIR *dir, struct dirent *directory, char **contents, int count)
 
 void	ft_directories(char **argv, DIR *dir)
 {
-	struct	dirent *directory;
-	char	**test;
-	int		count;
+	struct	dirent	*directory;
+	char			**contents;
+	int				count;
 
 	count = 0;
-	test = ft_init_test(ft_add_path(argv));
+	contents = ft_init_contents(ft_add_path(argv));
 	if (strcmp(argv[0], "./ft_ls") == 0)
-		test[0] = ft_strjoin(argv[1], "/");
+		contents[0] = ft_strjoin(argv[1], "/");
 	else
 	{
 		ft_printf("\n%s:\n", ft_add_path(argv));
-		test[0] = ft_strjoin(argv[0], argv[1]);
-		test[0] = ft_strjoin(test[0], "/");
+		contents[0] = ft_strjoin(argv[0], argv[1]);
+		contents[0] = ft_strjoin(contents[0], "/");
 	}
 	while (dir != NULL)
 	{
 		if((directory = readdir(dir)) != NULL)
 		{
-			test[count + 1] = ft_strdup(directory->d_name);
+			contents[count + 1] = ft_strdup(directory->d_name);
 			count++;
 		}
 		else
 			break;
 	}
-	ft_sort_time(&test, 1, count + 1);
-	//g_flags.r == 1 ? ft_rsort(&test, 1, count + 1) : ft_sort(&test, 1, count + 1);
-	main((count + 1), test);
+	if (g_flags.t == 1)
+		ft_sort_time(&contents, 1, count + 1);
+	else
+		g_flags.r == 1 ? ft_rsort(&contents, 1, count + 1) : ft_sort(&contents, 1, count + 1);
+	main((count + 1), contents);
 }
 
 void	ft_parse_contents(char **argv, int argc)
@@ -334,7 +107,7 @@ void	ft_parse_contents(char **argv, int argc)
 		return ;
 	stats = ft_memalloc(sizeof(struct stat));
 	lstat(ft_add_path(argv), stats);
-	if (!(stats->st_mode & S_IRUSR))
+	if (!(stats->st_mode & S_IRUSR) && g_flags.R == 1)
 	{
 		if ((stats->st_mode & S_IFMT) == S_IFDIR)
 		{
@@ -361,29 +134,6 @@ void	ft_parse_contents(char **argv, int argc)
 	}
 	ft_next_arg(argv, argc);
 }
-
-
-int	ft_temp(char **argv, int argc)
-{
-	int i;
-
-	i = 1;
-	while (i < argc)
-	{
-		if (argv[i][0] == '.')
-		{
-			while (i < argc - 1)
-			{
-				argv[i] = ft_strdup(argv[i + 1]);
-				i++;
-			}
-			argc = ft_temp(argv, argc - 1);
-		}
-		i++;
-	}
-	return(argc);
-}
-
 
 
 void	ft_print_scaled(char *argv, char *parent, int *printed)
@@ -451,19 +201,8 @@ void	ft_scale_window(int argc, char **argv, struct winsize win)
 	}
 }
 
-char	*ft_time(time_t tse)
+char	*ft_parse_time(char *file_time, char *current, char *result, int i)
 {
-	char	*file_time;
-	char	*current;
-	char	*temp;
-	time_t	now;
-	int		i;
-
-	time(&now);
-	file_time = ft_strdup(ctime(&tse));
-	current = ctime(&now);
-	temp = ft_memalloc(sizeof(char) * 13);
-	i = 0;
 	while (i <= 3)
 	{
 		if (file_time[i + 20] != current[i + 20])
@@ -471,25 +210,39 @@ char	*ft_time(time_t tse)
 			i = 0;
 			while (i <= 6)
 			{
-				temp[i] = file_time[i + 4];
+				result[i] = file_time[i + 4];
 				i++;
 			}
 			while (i <= 11)
 			{
-				temp[i] = file_time[i + 12];
+				result[i] = file_time[i + 12];
 				i++;
 			}
-			return (temp);
+			return (result);
 		}
 		i++;
 	}
 	i = 0;
 	while (i <= 11)
 	{
-		temp[i] = file_time[i + 4];
+		result[i] = file_time[i + 4];
 		i++;
 	}
-	return (temp);
+}
+
+char	*ft_time(time_t tse)
+{
+	char	*file_time;
+	char	*current;
+	char	*result;
+	time_t	now;
+
+	time(&now);
+	file_time = ft_strdup(ctime(&tse));
+	current = ctime(&now);
+	result = ft_memalloc(sizeof(char) * 13);
+	result = ft_parse_time(file_time, current, result, 0);
+	return (result);
 }
 
 void	ft_print_xattr()
@@ -497,7 +250,7 @@ void	ft_print_xattr()
 
 }
 
-void	ft_get_permissions(char *argv, struct stat stats, t_col columns, ssize_t xattr, acl_t acl, char *buffer, ssize_t test, ssize_t s, char *name)
+void	ft_get_permissions(char *argv, t_col columns, t_attr atr)
 {
 	struct passwd	uid;
 	struct group	gid;
@@ -505,56 +258,56 @@ void	ft_get_permissions(char *argv, struct stat stats, t_col columns, ssize_t xa
 
 	if (g_flags.l == 1)
 	{
-		uid = *getpwuid(stats.st_uid);
-		gid = *getgrgid(stats.st_gid);
-		if(S_ISDIR(stats.st_mode))
+		uid = *getpwuid(atr.stats.st_uid);
+		gid = *getgrgid(atr.stats.st_gid);
+		if(S_ISDIR(atr.stats.st_mode))
 		ft_printf("d");
-		else if (S_ISLNK(stats.st_mode))
+		else if (S_ISLNK(atr.stats.st_mode))
 			ft_printf("l");
 		else
 			ft_printf("-");
-		(stats.st_mode & S_IRUSR) ? ft_printf("r") : ft_printf("-");
-		(stats.st_mode & S_IWUSR) ? ft_printf("w") : ft_printf("-");
-		(stats.st_mode & S_IXUSR) ? ft_printf("x") : ft_printf("-");
-		(stats.st_mode & S_IRGRP) ? ft_printf("r") : ft_printf("-");
-		(stats.st_mode & S_IWGRP) ? ft_printf("w") : ft_printf("-");
-		(stats.st_mode & S_IXGRP) ? ft_printf("x") : ft_printf("-");
-		(stats.st_mode & S_IROTH) ? ft_printf("r") : ft_printf("-");
-		(stats.st_mode & S_IWOTH) ? ft_printf("w") : ft_printf("-");
-		(stats.st_mode & S_IXOTH) ? ft_printf("x") : ft_printf("-");
-		if (xattr)
+		(atr.stats.st_mode & S_IRUSR) ? ft_printf("r") : ft_printf("-");
+		(atr.stats.st_mode & S_IWUSR) ? ft_printf("w") : ft_printf("-");
+		(atr.stats.st_mode & S_IXUSR) ? ft_printf("x") : ft_printf("-");
+		(atr.stats.st_mode & S_IRGRP) ? ft_printf("r") : ft_printf("-");
+		(atr.stats.st_mode & S_IWGRP) ? ft_printf("w") : ft_printf("-");
+		(atr.stats.st_mode & S_IXGRP) ? ft_printf("x") : ft_printf("-");
+		(atr.stats.st_mode & S_IROTH) ? ft_printf("r") : ft_printf("-");
+		(atr.stats.st_mode & S_IWOTH) ? ft_printf("w") : ft_printf("-");
+		(atr.stats.st_mode & S_IXOTH) ? ft_printf("x") : ft_printf("-");
+		if (atr.xattr > 0)
 			ft_printf("@ ");
-		else if (acl)
+		else if (atr.acl)
 			ft_printf("+ ");
 		else
 			ft_printf("  ");
-		ft_printf("%*d ", columns.links, stats.st_nlink);
+		ft_printf("%*d ", columns.links, atr.stats.st_nlink);
 		ft_printf("%*-s  ", columns.user, uid.pw_name);
 		ft_printf("%*-s  ", columns.group, gid.gr_name);
-		ft_printf("%*lld ", columns.f_size, stats.st_size);
-		ft_printf("%s ", ft_time(stats.st_ctimespec.tv_sec));
+		ft_printf("%*lld ", columns.f_size, atr.stats.st_size);
+		ft_printf("%s ", ft_time(atr.stats.st_ctimespec.tv_sec));
 	}
 	ft_printf("%s", argv);
-	if (S_ISLNK(stats.st_mode))
+	if (S_ISLNK(atr.stats.st_mode))
 	{
-		printf(" -> %s", buffer);
-		free(buffer);
+		printf(" -> %s", atr.buffer);
+		free(atr.buffer);
 	}
 	printf("\n");
-	if (test > 0)
+	if (atr.xattr > 0)
 	{
-		ptr = name;
-		while (*name)
+		ptr = atr.name;
+		while (*atr.name)
 		{
 			printf("        ");
 
-			while (*name)
+			while (*atr.name)
 			{
-				printf("%c", *name);
-				name++;
+				printf("%c", *atr.name);
+				atr.name++;
 			}
 			printf("\n");
-			name++;
+			atr.name++;
 		}
 		free(ptr);
 	}
@@ -592,95 +345,93 @@ t_col	ft_columns(char **argv, int argc, struct stat stats)
 	return (columns);
 }
 
+void	ft_init_attributes(t_attr *attributes, t_col *columns)
+{
+	attributes->xattr = 0;
+	attributes->xattr_s = 0;
+	attributes->acl = NULL;
+	columns->f_size = 0;
+	columns->group = 0;
+	columns->links = 0;
+	columns->user = 0;
+
+}
+
+void	ft_subsequent(char **argv, int i, t_attr atr, t_col columns)
+{
+	lstat(ft_add_path_single(argv[0], argv[i]), &atr.stats);
+	atr.xattr = listxattr(ft_add_path_single(argv[0], argv[i]), NULL, 0, 0);
+
+	atr.xattr_s = getxattr(ft_add_path_single(argv[0], argv[i]), atr.name, NULL, 100, 0, 0);
+	if (S_ISLNK(atr.stats.st_mode))
+	{
+		atr.buffer = ft_memalloc(sizeof(char) * 128);
+		readlink(ft_add_path_single(argv[0], argv[i]), atr.buffer, 128);
+	}
+	atr.acl = acl_get_link_np(ft_add_path_single(argv[0], argv[i]), ACL_TYPE_EXTENDED);
+	if ((g_flags.a == 1 && argv[i][0] == '.') || argv[i][0] != '.')
+	{
+		atr.xattr = listxattr(ft_add_path_single(argv[0], argv[i]), NULL, 1024, 0);
+
+		if (atr.xattr > 0)
+		{
+			atr.name = ft_memalloc(sizeof(char) * atr.xattr + 1);
+			listxattr(ft_add_path_single(argv[0], argv[i]), atr.name, atr.xattr, 0);
+		}
+		ft_get_permissions(argv[i], columns, atr);
+		}
+}
+
+void	ft_initial(char **argv, int i, t_attr atr, t_col columns)
+{
+	lstat(argv[i], &atr.stats);
+	atr.xattr = listxattr(argv[i], NULL, 0, 0);
+	atr.xattr_s = getxattr(argv[i], atr.name, NULL, 100, 0, 0);
+	if (S_ISLNK(atr.stats.st_mode))
+	{
+		atr.buffer = ft_memalloc(sizeof(char) * 128);
+		readlink(argv[i], atr.buffer, 128);
+	}
+	atr.acl = acl_get_link_np(argv[i], ACL_TYPE_EXTENDED);
+	if ((atr.stats.st_mode & S_IFMT) != S_IFDIR)
+	{
+		if ((g_flags.a == 1 && argv[i][0] == '.') || argv[i][0] != '.')
+		{
+			atr.xattr = listxattr(argv[i], NULL, 1024, 0);
+			if (atr.xattr > 0)
+			{
+				atr.name = ft_memalloc(sizeof(char) * atr.xattr + 1);
+				listxattr(argv[i], atr.name, atr.xattr, 0);
+			}
+			ft_get_permissions(argv[i], columns, atr);
+		}
+	}
+}
+
 void	ft_print_contents_simple(int argc, char **argv)
 {
-	int	i;
-	struct stat	stats;
+	int		i;
 	t_col	columns;
-	ssize_t xattr;
-	acl_t acl = NULL;
-	char *buffer;
-	char *name;
-	ssize_t s = 0;
-	ssize_t test = 0;
+	t_attr	atr;
 
 	i = 1;
+	ft_init_attributes(&atr, &columns);
 	if (g_flags.l == 1)
-		columns = ft_columns(argv, argc, stats);
+		columns = ft_columns(argv, argc, atr.stats);
 	while (i < argc)
 	{
-//		ft_get_permissions(argv[i]);
-		if (ft_strcmp(argv[0], "./ft_ls") != 0)
-		{
-			lstat(ft_add_path_single(argv[0], argv[i]), &stats);
-			xattr = listxattr(ft_add_path_single(argv[0], argv[i]), NULL, 0, 0);
-
-			s = getxattr(ft_add_path_single(argv[0], argv[i]), name, NULL, 100, 0, 0);
-			if (S_ISLNK(stats.st_mode))
-			{
-				buffer = ft_memalloc(sizeof(char) * 128);
-				readlink(ft_add_path_single(argv[0], argv[i]), buffer, 128);
-			}
-			acl = acl_get_link_np(ft_add_path_single(argv[0], argv[i]), ACL_TYPE_EXTENDED);
-			if ((g_flags.a == 1 && argv[i][0] == '.') || argv[i][0] != '.')
-			{
-				test = listxattr(ft_add_path_single(argv[0], argv[i]), NULL, 1024, 0);
-
-				if (test > 0)
-				{
-				//	printf("name malloc = %d\n", test);
-					name = ft_memalloc(sizeof(char) * test + 1);
-					listxattr(ft_add_path_single(argv[0], argv[i]), name, test, 0);
-				}
-				ft_get_permissions(argv[i], stats, columns, xattr, acl, buffer,
-								   test, s, name);//ft_printf("%s\n", argv[i]);
-			}
-//			if (argv[i][0] != '.')
-//				ft_printf("%s\n", argv[i]);
-		}
+		if (ft_strcmp(argv[0], "./ft_ls") == 0)
+			ft_initial(argv, i, atr, columns);
 		else
-		{
-			lstat(argv[i], &stats);
-			xattr = listxattr(argv[i], NULL, 0, 0);
-
-			s = getxattr(argv[i], name, NULL, 100, 0, 0);
-			if (S_ISLNK(stats.st_mode))
-			{
-				buffer = ft_memalloc(sizeof(char) * 128);
-				readlink(argv[i], buffer, 128);
-
-			}
-			acl = acl_get_link_np(argv[i], ACL_TYPE_EXTENDED);
-			if ((stats.st_mode & S_IFMT) != S_IFDIR)
-			{
-				if ((g_flags.a == 1 && argv[i][0] == '.') || argv[i][0] != '.')
-				{
-					test = listxattr(argv[i], NULL, 1024, 0);
-					if (test > 0)
-					{
-		//				printf("name malloc = %d\n", test);
-
-						name = ft_memalloc(sizeof(char) * test + 1);
-						listxattr(argv[i], name, test, 0);
-					}
-					ft_get_permissions(argv[i], stats, columns, xattr, acl,
-									   buffer, test, s,
-									   name);//ft_printf("%s\n", argv[i]);
-				}
-//				if (argv[i][0] != '.')
-//					ft_printf("%s\n", argv[i]);
-			}
-		}
+			ft_subsequent(argv, i, atr, columns);
 		i++;
 	}
-
 }
 
 struct winsize	ft_max_width(char **argv, int argc, struct winsize win)
 {
 	int		i;
 	size_t	width;
-	size_t	height;
 
 	i = 1;
 	width = 0;
@@ -695,40 +446,39 @@ struct winsize	ft_max_width(char **argv, int argc, struct winsize win)
 	return (win);
 }
 
-
 void	ft_single(void)
 {
 	DIR				*dir;
-	struct	dirent *directory;
-	char	**test;
-	int		count;
+	struct	dirent	*directory;
+	char			**contents;
+	int				count;
 
 	count = 0;
 	dir = opendir(".");
-	test = ft_init_test("./");
-		test[0] = ft_strdup("./");
+	contents = ft_init_contents("./");
+		contents[0] = ft_strdup("./");
 	while (dir != NULL)
 	{
 		if((directory = readdir(dir)) != NULL)
 		{
-			test[count + 1] = ft_strdup(directory->d_name);
+			contents[count + 1] = ft_strdup(directory->d_name);
 			count++;
 		}
 		else
 			break;
 	}
-	//ft_sort_time(&test, 1, count + 1);
-	g_flags.r == 1 ? ft_rsort(&test, 1, count + 1) : ft_sort(&test, 1, count + 1);
-	main((count + 1), test);
+	if (g_flags.t == 1)
+		ft_sort_time(&contents, 1, count + 1);
+	else
+		g_flags.r == 1 ? ft_rsort(&contents, 1, count + 1) : ft_sort(&contents, 1, count + 1);
+	main((count + 1), contents);
 }
 
 int main(int argc, char **argv)
 {
-	int i;
 	struct winsize	win;
 
 	ioctl(0, TIOCGWINSZ, &win);
-	i = 1;
 	if (argc == 1 && (ft_strcmp(argv[0], "./ft_ls") == 0))
 	{
 		ft_single();
@@ -742,25 +492,14 @@ int main(int argc, char **argv)
 	if (argc >= 2 && (ft_strcmp(argv[0], "./ft_ls") != 0))
 	{
 		if (g_flags.a == 0)
-			argc = ft_temp(argv, argc);
-		if (g_flags.one == 1)
+			argc = ft_remove_hidden(argv, argc);
+		if (g_flags.one == 1 || g_flags.l == 1)
 			ft_print_contents_simple(argc, argv);
 		else
 			ft_scale_window(argc, argv, ft_max_width(argv, argc, win));
 	}
 	if (argc >= 2)
-	{
 		ft_parse_contents(argv, argc);
-	}
-//	ft_uid_TEST(argv);
-//	while (i < count)
-//	{
-//		ft_printf("%s\n", contents[i].file);
-//		free(contents[i].file);
-//		i++;
-//	}
-	//free(contents);
-	//closedir(dir);
 	return (0);
 }
 

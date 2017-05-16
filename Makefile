@@ -12,7 +12,7 @@
 
 LS = ft_ls
 
-C_FILES = ft_ls.c
+C_FILES = ft_ls.c path.c sort.c arguments.c hidden.c
 
 LIBFT		=	./libft/libft.a
 PRINTF		=	./libraries/ft_printf/libftprintf.a

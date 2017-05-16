@@ -51,16 +51,52 @@ typedef struct			s_col
 	int		f_size;
 }						t_col;
 
-static t_flags g_flags;
+typedef struct			s_attr
+{
+	struct stat	stats;
+	ssize_t		xattr;
+	ssize_t		xattr_s;
+	acl_t		acl;
+	char		*buffer;
+	char		*name;
+
+}						t_attr;
+
+t_flags g_flags;
 
 
 int						main(int argc, char **argv);
-char					**ft_init_test(char *argv);
+char					**ft_init_contents(char *argv);
 size_t					ft_count_files(char *argv);
 
+/*
+** sort.c
+*/
 void	ft_sort(char ***argv, int i, int size);
 void	ft_rsort(char ***argv, int i, int size);
+void	ft_sort_time(char ***argv, int i, int size);
+
+/*
+** path.c
+*/
+char *ft_add_path(char **argv);
+char *ft_add_path_single(char *argv0, char *argv1);
+
+/*
+** hidden.c
+*/
+int	ft_hidden(char **argv, int argc);
+int	ft_remove_hidden(char **argv, int argc);
+
+/*
+** arguments.c
+*/
+int	ft_get_arguments(char **argv, int *argc);
+void	ft_clear_invalid(char **argv, int *argc, int i);
+void	ft_args(char **argv, int *argc);
+void	ft_next_arg(char **argv, int argc);
 
 void	ft_parse_contents(char **argv, int argc);
+int	ft_parse_flags(char *arg);
 
 #endif

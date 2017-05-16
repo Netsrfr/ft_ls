@@ -1,0 +1,39 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jpfeffer <jpfeffer@student.42.us.org>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/16 10:39:35 by jpfeffer          #+#    #+#             */
+/*   Updated: 2017/05/16 10:39:35 by jpfeffer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "ft_ls.h"
+
+char *ft_add_path(char **argv)
+{
+	char	*temp;
+
+	if (strcmp(argv[0], "./ft_ls") == 0)
+		temp = ft_strdup(argv[1]);
+	else
+	{
+		temp = ft_strjoin(argv[0], argv[1]);
+	}
+	return (temp);
+}
+
+char *ft_add_path_single(char *argv0, char *argv1)
+{
+	char	*temp;
+
+	if (strcmp(argv0, "./ft_ls") == 0)
+		return (argv1);
+	else
+	{
+		temp = ft_strjoin(argv0, argv1);
+	}
+	return (temp);
+}
