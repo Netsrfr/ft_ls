@@ -91,7 +91,6 @@ void	ft_directories(char **argv, DIR *dir)
 		g_flags.r == 1 ? ft_rsort(&contents, 1, count + 1) : ft_sort(&contents, 1, count + 1);
 	free(path);
 	main((count + 1), contents);
-	//free(contents);
 
 }
 
@@ -101,9 +100,9 @@ void	ft_parse_contents(char **argv, int argc)
 	struct stat stats;
 	char	*path;
 
-	path = ft_add_path(argv);
 	if(ft_hidden(argv, argc) == 0)
 		return ;
+	path = ft_add_path(argv);
 	lstat(path, &stats);
 	if (!(stats.st_mode & S_IRUSR) && g_flags.R == 1)
 	{
@@ -128,11 +127,11 @@ void	ft_parse_contents(char **argv, int argc)
 				printf("\n%s:\n", path);
 		}
 		ft_directories(argv, dir);
-	//	closedir(dir);
 	}
+	if(dir)
+	closedir(dir);
 	free(path);
 	ft_next_arg(argv, argc);
-	//free(argv);
 }
 
 
@@ -263,53 +262,53 @@ void	ft_get_permissions(char *argv, t_col columns, t_attr atr)
 		uid = *getpwuid(atr.stats.st_uid);
 		gid = *getgrgid(atr.stats.st_gid);
 		if(S_ISDIR(atr.stats.st_mode))
-		printf("d");
+		ft_printf("d");
 		else if (S_ISLNK(atr.stats.st_mode))
-			printf("l");
+			ft_printf("l");
 		else
-			printf("-");
-		(atr.stats.st_mode & S_IRUSR) ? printf("r") : printf("-");
-		(atr.stats.st_mode & S_IWUSR) ? printf("w") : printf("-");
-		(atr.stats.st_mode & S_IXUSR) ? printf("x") : printf("-");
-		(atr.stats.st_mode & S_IRGRP) ? printf("r") : printf("-");
-		(atr.stats.st_mode & S_IWGRP) ? printf("w") : printf("-");
-		(atr.stats.st_mode & S_IXGRP) ? printf("x") : printf("-");
-		(atr.stats.st_mode & S_IROTH) ? printf("r") : printf("-");
-		(atr.stats.st_mode & S_IWOTH) ? printf("w") : printf("-");
-		(atr.stats.st_mode & S_IXOTH) ? printf("x") : printf("-");
+			ft_printf("-");
+		(atr.stats.st_mode & S_IRUSR) ? ft_printf("r") : ft_printf("-");
+		(atr.stats.st_mode & S_IWUSR) ? ft_printf("w") : ft_printf("-");
+		(atr.stats.st_mode & S_IXUSR) ? ft_printf("x") : ft_printf("-");
+		(atr.stats.st_mode & S_IRGRP) ? ft_printf("r") : ft_printf("-");
+		(atr.stats.st_mode & S_IWGRP) ? ft_printf("w") : ft_printf("-");
+		(atr.stats.st_mode & S_IXGRP) ? ft_printf("x") : ft_printf("-");
+		(atr.stats.st_mode & S_IROTH) ? ft_printf("r") : ft_printf("-");
+		(atr.stats.st_mode & S_IWOTH) ? ft_printf("w") : ft_printf("-");
+		(atr.stats.st_mode & S_IXOTH) ? ft_printf("x") : ft_printf("-");
 		if (atr.xattr > 0)
-			printf("@ ");
+			ft_printf("@ ");
 		else if (atr.acl)
-			printf("+ ");
+			ft_printf("+ ");
 		else
-			printf("  ");
-		printf("%*d ", columns.links, atr.stats.st_nlink);
-		printf("%*-s  ", columns.user, uid.pw_name);
-		printf("%*-s  ", columns.group, gid.gr_name);
-		printf("%*lld ", columns.f_size, atr.stats.st_size);
-		printf("%s ", file_time = ft_time(atr.stats.st_ctimespec.tv_sec));
+			ft_printf("  ");
+		ft_printf("%*d ", columns.links, atr.stats.st_nlink);
+		ft_printf("%*-s  ", columns.user, uid.pw_name);
+		ft_printf("%*-s  ", columns.group, gid.gr_name);
+		ft_printf("%*lld ", columns.f_size, atr.stats.st_size);
+		ft_printf("%s ", file_time = ft_time(atr.stats.st_ctimespec.tv_sec));
 		free(file_time);
 	}
-	printf("%s", argv);
+	ft_printf("%s", argv);
 	if (S_ISLNK(atr.stats.st_mode))
 	{
-		printf(" -> %s", atr.buffer);
+		ft_printf(" -> %s", atr.buffer);
 		free(atr.buffer);
 	}
-	printf("\n");
+	ft_printf("\n");
 	if (atr.xattr > 0)
 	{
 		ptr = atr.name;
 		while (*atr.name)
 		{
-			printf("        ");
+			ft_printf("        ");
 
 			while (*atr.name)
 			{
-				printf("%c", *atr.name);
+				ft_printf("%c", *atr.name);
 				atr.name++;
 			}
-			printf("\n");
+			ft_printf("\n");
 			atr.name++;
 		}
 		free(ptr);
