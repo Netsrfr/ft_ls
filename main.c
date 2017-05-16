@@ -44,12 +44,6 @@ int	ft_parse_flags(char *arg)
 	return (0);
 }
 
-
-
-
-
-
-
 char	**ft_init_contents(char *argv)
 {
 	char	**contents;
@@ -59,10 +53,6 @@ char	**ft_init_contents(char *argv)
 	contents = ft_memalloc(sizeof(char*) * count + 1);
 	return (contents);
 }
-
-
-
-
 
 //void	ft_parse_dir(DIR *dir, struct dirent *directory, char **contents, int count)
 
@@ -311,8 +301,6 @@ void	ft_get_permissions(char *argv, t_col columns, t_attr atr)
 		}
 		free(ptr);
 	}
-
-
 }
 
 t_col	ft_columns(char **argv, int argc, struct stat stats)
@@ -502,6 +490,3 @@ int main(int argc, char **argv)
 		ft_parse_contents(argv, argc);
 	return (0);
 }
-
-
-
