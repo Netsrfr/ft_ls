@@ -44,9 +44,11 @@ int	ft_remove_hidden(char **argv, int argc)
 		{
 			while (i < argc - 1)
 			{
+				free(argv[i]);
 				argv[i] = ft_strdup(argv[i + 1]);
 				i++;
 			}
+			free(argv[i]);
 			argc = ft_remove_hidden(argv, argc - 1);
 		}
 		i++;

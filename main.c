@@ -50,7 +50,8 @@ char	**ft_init_contents(char *argv)
 	size_t	count;
 
 	count = ft_count_files(argv);
-	contents = ft_memalloc(sizeof(char*) * count + 1);
+	contents = ft_memalloc(sizeof(char*) * count);
+	mem = contents;
 	return (contents);
 }
 
@@ -61,14 +62,16 @@ void	ft_directories(char **argv, DIR *dir)
 	struct	dirent	*directory;
 	char			**contents;
 	int				count;
+	char			*path;
 
 	count = 0;
-	contents = ft_init_contents(ft_add_path(argv));
+	path = ft_add_path(argv);
+	contents = ft_init_contents(path);
 	if (strcmp(argv[0], "./ft_ls") == 0)
 		contents[0] = ft_strjoin(argv[1], "/");
 	else
 	{
-		ft_printf("\n%s:\n", ft_add_path(argv));
+		printf("\n%s:\n", path);
 		contents[0] = ft_strjoin(argv[0], argv[1]);
 		contents[0] = ft_strjoin(contents[0], "/");
 	}
@@ -86,43 +89,50 @@ void	ft_directories(char **argv, DIR *dir)
 		ft_sort_time(&contents, 1, count + 1);
 	else
 		g_flags.r == 1 ? ft_rsort(&contents, 1, count + 1) : ft_sort(&contents, 1, count + 1);
+	free(path);
 	main((count + 1), contents);
+	//free(contents);
+
 }
 
 void	ft_parse_contents(char **argv, int argc)
 {
 	DIR		*dir;
-	struct stat *stats;
+	struct stat stats;
+	char	*path;
+
+	path = ft_add_path(argv);
 	if(ft_hidden(argv, argc) == 0)
 		return ;
-	stats = ft_memalloc(sizeof(struct stat));
-	lstat(ft_add_path(argv), stats);
-	if (!(stats->st_mode & S_IRUSR) && g_flags.R == 1)
+	lstat(path, &stats);
+	if (!(stats.st_mode & S_IRUSR) && g_flags.R == 1)
 	{
-		if ((stats->st_mode & S_IFMT) == S_IFDIR)
+		if ((stats.st_mode & S_IFMT) == S_IFDIR)
 		{
-			ft_printf("\n%s:\n", ft_add_path(argv));
+			printf("\n%s:\n", path);
 			errno = 13;
 			perror(ft_strjoin("ft_ls: ", argv[1]));
 		}
 	}
-	if((dir = opendir(ft_add_path(argv))) != '\0' && (g_flags.R == 1 \
+	if((dir = opendir(path)) != '\0' && (g_flags.R == 1 \
  	|| strcmp(argv[0], "./ft_ls") == 0))
 	{
 		if (g_flags.start > 2 && strcmp(argv[0], "./ft_ls") == 0)
 		{
 			if (g_flags.first == 0)
 			{
-				ft_printf("%s:\n", ft_add_path(argv));
+				printf("%s:\n", path);
 				g_flags.first = 1;
 			}
 			else
-				ft_printf("\n%s:\n", ft_add_path(argv));
+				printf("\n%s:\n", path);
 		}
 		ft_directories(argv, dir);
-		closedir(dir);
+	//	closedir(dir);
 	}
+	free(path);
 	ft_next_arg(argv, argc);
+	//free(argv);
 }
 
 
@@ -132,9 +142,9 @@ void	ft_print_scaled(char *argv, char *parent, int *printed)
 	if (ft_strcmp(parent, "./ft_ls") != 0)
 	{
 		if (g_flags.a == 1 && argv[0] == '.')
-			ft_printf("%s", argv);
+			printf("%s", argv);
 		else if (argv[0] != '.')
-			ft_printf("%s", argv);
+			printf("%s", argv);
 		else
 			(*printed)--;
 	}
@@ -144,9 +154,9 @@ void	ft_print_scaled(char *argv, char *parent, int *printed)
 		if ((stats.st_mode & S_IFMT) != S_IFDIR)
 		{
 			if (g_flags.a == 1 && argv[0] == '.')
-				ft_printf("%s", argv);
+				printf("%s", argv);
 			else if (argv[0] != '.')
-				ft_printf("%s", argv);
+				printf("%s", argv);
 			else
 				(*printed)--;
 		}
@@ -160,7 +170,7 @@ void	ft_put_width(char *argv, unsigned short max, int position)
 	space = max - ft_strlen(argv);
 	if (position < max - 1)
 		while (space-- > 0)
-			ft_printf(" ");
+			printf(" ");
 }
 
 void	ft_scale_window(int argc, char **argv, struct winsize win)
@@ -183,7 +193,7 @@ void	ft_scale_window(int argc, char **argv, struct winsize win)
 			ft_put_width(argv[i + height * position], win.ws_ypixel, position);
 			position++;
 		}
-		ft_printf("\n");
+		printf("\n");
 		if(printed >= argc - 1)
 			break;
 		i++;
@@ -232,6 +242,7 @@ char	*ft_time(time_t tse)
 	current = ctime(&now);
 	result = ft_memalloc(sizeof(char) * 13);
 	result = ft_parse_time(file_time, current, result, 0);
+	free(file_time);
 	return (result);
 }
 
@@ -245,39 +256,41 @@ void	ft_get_permissions(char *argv, t_col columns, t_attr atr)
 	struct passwd	uid;
 	struct group	gid;
 	char *ptr;
+	char			*file_time;
 
 	if (g_flags.l == 1)
 	{
 		uid = *getpwuid(atr.stats.st_uid);
 		gid = *getgrgid(atr.stats.st_gid);
 		if(S_ISDIR(atr.stats.st_mode))
-		ft_printf("d");
+		printf("d");
 		else if (S_ISLNK(atr.stats.st_mode))
-			ft_printf("l");
+			printf("l");
 		else
-			ft_printf("-");
-		(atr.stats.st_mode & S_IRUSR) ? ft_printf("r") : ft_printf("-");
-		(atr.stats.st_mode & S_IWUSR) ? ft_printf("w") : ft_printf("-");
-		(atr.stats.st_mode & S_IXUSR) ? ft_printf("x") : ft_printf("-");
-		(atr.stats.st_mode & S_IRGRP) ? ft_printf("r") : ft_printf("-");
-		(atr.stats.st_mode & S_IWGRP) ? ft_printf("w") : ft_printf("-");
-		(atr.stats.st_mode & S_IXGRP) ? ft_printf("x") : ft_printf("-");
-		(atr.stats.st_mode & S_IROTH) ? ft_printf("r") : ft_printf("-");
-		(atr.stats.st_mode & S_IWOTH) ? ft_printf("w") : ft_printf("-");
-		(atr.stats.st_mode & S_IXOTH) ? ft_printf("x") : ft_printf("-");
+			printf("-");
+		(atr.stats.st_mode & S_IRUSR) ? printf("r") : printf("-");
+		(atr.stats.st_mode & S_IWUSR) ? printf("w") : printf("-");
+		(atr.stats.st_mode & S_IXUSR) ? printf("x") : printf("-");
+		(atr.stats.st_mode & S_IRGRP) ? printf("r") : printf("-");
+		(atr.stats.st_mode & S_IWGRP) ? printf("w") : printf("-");
+		(atr.stats.st_mode & S_IXGRP) ? printf("x") : printf("-");
+		(atr.stats.st_mode & S_IROTH) ? printf("r") : printf("-");
+		(atr.stats.st_mode & S_IWOTH) ? printf("w") : printf("-");
+		(atr.stats.st_mode & S_IXOTH) ? printf("x") : printf("-");
 		if (atr.xattr > 0)
-			ft_printf("@ ");
+			printf("@ ");
 		else if (atr.acl)
-			ft_printf("+ ");
+			printf("+ ");
 		else
-			ft_printf("  ");
-		ft_printf("%*d ", columns.links, atr.stats.st_nlink);
-		ft_printf("%*-s  ", columns.user, uid.pw_name);
-		ft_printf("%*-s  ", columns.group, gid.gr_name);
-		ft_printf("%*lld ", columns.f_size, atr.stats.st_size);
-		ft_printf("%s ", ft_time(atr.stats.st_ctimespec.tv_sec));
+			printf("  ");
+		printf("%*d ", columns.links, atr.stats.st_nlink);
+		printf("%*-s  ", columns.user, uid.pw_name);
+		printf("%*-s  ", columns.group, gid.gr_name);
+		printf("%*lld ", columns.f_size, atr.stats.st_size);
+		printf("%s ", file_time = ft_time(atr.stats.st_ctimespec.tv_sec));
+		free(file_time);
 	}
-	ft_printf("%s", argv);
+	printf("%s", argv);
 	if (S_ISLNK(atr.stats.st_mode))
 	{
 		printf(" -> %s", atr.buffer);
@@ -309,6 +322,7 @@ t_col	ft_columns(char **argv, int argc, struct stat stats)
 	struct passwd	uid;
 	struct group	gid;
 	t_col	columns;
+	char	*path;
 
 	i = 1;
 	columns.f_size = 0;
@@ -317,7 +331,9 @@ t_col	ft_columns(char **argv, int argc, struct stat stats)
 	columns.links = 0;
 	while (i < argc)
 	{
-		lstat(ft_add_path_single(argv[0], argv[i]), &stats);
+		path = ft_add_path_single(argv[0], argv[i]);
+		lstat(path, &stats);
+		free(path);
 		uid = *getpwuid(stats.st_uid);
 		gid = *getgrgid(stats.st_gid);
 		if (ft_mylog(stats.st_nlink) > columns.links)
@@ -347,27 +363,31 @@ void	ft_init_attributes(t_attr *attributes, t_col *columns)
 
 void	ft_subsequent(char **argv, int i, t_attr atr, t_col columns)
 {
-	lstat(ft_add_path_single(argv[0], argv[i]), &atr.stats);
-	atr.xattr = listxattr(ft_add_path_single(argv[0], argv[i]), NULL, 0, 0);
+	char	*path;
 
-	atr.xattr_s = getxattr(ft_add_path_single(argv[0], argv[i]), atr.name, NULL, 100, 0, 0);
+	path = ft_add_path_single(argv[0], argv[i]);
+	lstat(path, &atr.stats);
+	atr.xattr = listxattr(path, NULL, 0, 0);
+
+	atr.xattr_s = getxattr(path, atr.name, NULL, 100, 0, 0);
 	if (S_ISLNK(atr.stats.st_mode))
 	{
 		atr.buffer = ft_memalloc(sizeof(char) * 128);
-		readlink(ft_add_path_single(argv[0], argv[i]), atr.buffer, 128);
+		readlink(path, atr.buffer, 128);
 	}
-	atr.acl = acl_get_link_np(ft_add_path_single(argv[0], argv[i]), ACL_TYPE_EXTENDED);
+	atr.acl = acl_get_link_np(path, ACL_TYPE_EXTENDED);
 	if ((g_flags.a == 1 && argv[i][0] == '.') || argv[i][0] != '.')
 	{
-		atr.xattr = listxattr(ft_add_path_single(argv[0], argv[i]), NULL, 1024, 0);
+		atr.xattr = listxattr(path, NULL, 1024, 0);
 
 		if (atr.xattr > 0)
 		{
 			atr.name = ft_memalloc(sizeof(char) * atr.xattr + 1);
-			listxattr(ft_add_path_single(argv[0], argv[i]), atr.name, atr.xattr, 0);
+			listxattr(path, atr.name, atr.xattr, 0);
 		}
 		ft_get_permissions(argv[i], columns, atr);
-		}
+	}
+	free(path);
 }
 
 void	ft_initial(char **argv, int i, t_attr atr, t_col columns)
@@ -465,7 +485,19 @@ void	ft_single(void)
 int main(int argc, char **argv)
 {
 	struct winsize	win;
-
+	char **temp;
+	if (ft_strcmp(argv[0], "./ft_ls") == 0)
+	{
+		temp = ft_memalloc(sizeof(char *) * argc);
+		int i;
+		i = 0;
+		while (i < argc)
+		{
+			temp[i] = ft_strdup(argv[i]);
+			i++;
+		}
+		argv = temp;
+	}
 	ioctl(0, TIOCGWINSZ, &win);
 	if (argc == 1 && (ft_strcmp(argv[0], "./ft_ls") == 0))
 	{
@@ -488,5 +520,9 @@ int main(int argc, char **argv)
 	}
 	if (argc >= 2)
 		ft_parse_contents(argv, argc);
+	free(argv[0]);
+	free(argv[1]);
+	free(argv);
+	//while(1);
 	return (0);
 }

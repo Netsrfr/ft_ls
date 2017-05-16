@@ -63,6 +63,7 @@ typedef struct			s_attr
 }						t_attr;
 
 t_flags g_flags;
+char	**mem;
 
 
 int						main(int argc, char **argv);

@@ -26,10 +26,15 @@ int	ft_get_arguments(char **argv, int *argc)
 	{
 		while (i + g_flags.flag < *argc)
 		{
+			free(argv[i]);
 			argv[i] = ft_strdup(argv[i + g_flags.flag]);
 			i++;
 		}
-		argv[i + 1] = 0;
+		while(i < *argc)
+		{
+			free(argv[i]);
+			i++;
+		}
 	}
 	*argc -= g_flags.flag;
 	g_flags.start = *argc;
@@ -43,36 +48,38 @@ void	ft_clear_invalid(char **argv, int *argc, int i)
 		exit (0);
 	while (i + 1 < *argc)
 	{
+		free(argv[i]);
 		argv[i] = ft_strdup(argv[i + 1]);
 		i++;
 	}
-	argv[i] = 0;
+	free(argv[i]);
 	*argc = *argc - 1;
 }
 
 void	ft_args(char **argv, int *argc)
 {
-	struct stat	*stats;
+	struct stat	stats;
 	int			i;
 
 	i = 1;
-	stats = ft_memalloc(sizeof(struct stat) * 10);
 	ft_get_arguments(argv, argc);
 	while (i < *argc)
 	{
-		if (stat(argv[i], stats) == -1)
+		if (stat(argv[i], &stats) == -1)
 		{
 			ft_clear_invalid(argv, argc, i);
 			i--;
 		}
-		if ((stats->st_mode & S_IRUSR) == 0)
-			if ((stats->st_mode & S_IFMT) == S_IFDIR)
+		if ((stats.st_mode & S_IRUSR) == 0)
+			if ((stats.st_mode & S_IFMT) == S_IFDIR)
 			{
 				errno = 13;
 				perror(ft_strjoin("ft_ls: ", argv[i]));
 			}
 		i++;
 	}
+	if (g_flags.t == 1 && *argc > 2)
+		ft_sort_time(&argv, 1, *argc);
 	if (*argc > 2)
 		g_flags.r == 1 ? ft_rsort(&argv, 1, *argc) : ft_sort(&argv, 1, *argc);
 }
@@ -86,14 +93,18 @@ void	ft_next_arg(char **argv, int argc)
 	{
 		while (i + 1 < argc)
 		{
+			free(argv[i]);
 			argv[i] = ft_strdup(argv[i + 1]);
 			i++;
 		}
+		free(argv[i]);
 		ft_parse_contents(argv, (argc - 1));
 	}
 	if (argc == 3)
 	{
+		free(argv[1]);
 		argv[1] = ft_strdup(argv[2]);
+		free(argv[2]);
 		ft_parse_contents(argv, (argc - 1));
 	}
 }

@@ -19,6 +19,7 @@ void	ft_rsort(char ***argv, int i, int size)
 	if(ft_strcmp((*argv)[i], (*argv)[i + 1]) < 0)
 	{
 		temp = ft_strdup((*argv)[i + 1]);
+		free((*argv)[i + 1]);
 		(*argv)[i + 1] = ft_strdup((*argv)[i]);
 		(*argv)[i] = ft_strdup(temp);
 		free(temp);
@@ -35,7 +36,9 @@ void	ft_sort(char ***argv, int i, int size)
 	if(ft_strcmp((*argv)[i], (*argv)[i + 1]) > 0)
 	{
 		temp = ft_strdup((*argv)[i]);
+		free((*argv)[i]);
 		(*argv)[i] = ft_strdup((*argv)[i + 1]);
+		free((*argv)[i + 1]);
 		(*argv)[i + 1] = ft_strdup(temp);
 		free(temp);
 		ft_sort(argv, 1, size);
@@ -49,14 +52,20 @@ void	ft_sort_time(char ***argv, int i, int size)
 	char *temp;
 	struct stat	stats;
 	struct stat stats2;
+	char *path;
 
 	if (i + 1 < size)
 	{
-		lstat(ft_add_path_single((*argv)[0], (*argv)[i]), &stats);
-		lstat(ft_add_path_single((*argv)[0], (*argv)[i + 1]), &stats2);
+		path = ft_add_path_single((*argv)[0], (*argv)[i]);
+		lstat(path, &stats);
+		free(path);
+		path = ft_add_path_single((*argv)[0], (*argv)[i + 1]);
+		lstat(path, &stats2);
+		free(path);
 		if (stats.st_mtimespec.tv_sec < stats2.st_mtimespec.tv_sec)
 		{
 			temp = ft_strdup((*argv)[i]);
+			free((*argv)[i]);
 			(*argv)[i]     = ft_strdup((*argv)[i + 1]);
 			(*argv)[i + 1] = ft_strdup(temp);
 			free(temp);
