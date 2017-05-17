@@ -46,6 +46,7 @@ typedef struct		s_pf_flag
 t_flag				g_fl;
 ssize_t				g_return;
 char				*g_print;
+int					p_flag;
 
 ssize_t				ft_printf(const char *format, ...);
 void				flag_init(void);
@@ -82,7 +83,7 @@ char				*ft_putwidth(int width,
 								char *result);
 char				*ft_putwidth_no_p(int width, char *result);
 char				*ft_putwidth_o(uintmax_t arg, int width, char *result);
-char				*ft_putwidth_string(int width, char *result);
+void				ft_putwidth_string(int width, char **result);
 char				*ft_put_precision(char *result, int precision);
 
 char				*ft_putwidth_hex(char x, int precision, uintmax_t arg,

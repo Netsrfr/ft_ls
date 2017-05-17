@@ -85,7 +85,7 @@ int		parser(const char *format, va_list arguments)
 			fmt_ptr = ft_flags(++fmt_ptr, arguments);
 			fmt_ptr = ft_conversions(arguments, fmt_ptr);
 		}
-		if (g_print)
+		if (g_print != NULL)
 		{
 			g_return = ft_strlen(g_print) + g_return;
 			ft_putstr(g_print);
@@ -110,5 +110,6 @@ ssize_t	ft_printf(const char *format, ...)
 	va_start(arguments, format);
 	parser(format, arguments);
 	va_end(arguments);
+	free(g_print);
 	return (g_return);
 }

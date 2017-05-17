@@ -49,7 +49,6 @@ char	*ft_conversions(va_list ap, char *progress)
 
 int		ft_conversion_s(char *argument)
 {
-	char	*result;
 	char	*temp;
 
 	if (!(argument))
@@ -63,9 +62,12 @@ int		ft_conversion_s(char *argument)
 		temp = ft_strndup(argument, (size_t)g_fl.precision_v);
 	else
 		temp = ft_strdup(argument);
-	result = ft_putwidth_string(g_fl.width_v, temp);
-	g_print = ft_strdup(result);
-	free(result);
+	//free(argument);
+	ft_putwidth_string(g_fl.width_v, &temp);
+	free(g_print);
+	g_print = ft_strdup(temp);
+	p_flag = 1;
+	free(temp);
 	return (1);
 }
 

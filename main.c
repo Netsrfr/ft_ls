@@ -51,7 +51,7 @@ char	**ft_init_contents(char *argv)
 
 	count = ft_count_files(argv);
 	contents = ft_memalloc(sizeof(char*) * count);
-	mem = contents;
+	//mem = contents;
 	return (contents);
 }
 
@@ -63,17 +63,22 @@ void	ft_directories(char **argv, DIR *dir)
 	char			**contents;
 	int				count;
 	char			*path;
+	char *temp;
 
 	count = 0;
 	path = ft_add_path(argv);
 	contents = ft_init_contents(path);
 	if (strcmp(argv[0], "./ft_ls") == 0)
+	{
 		contents[0] = ft_strjoin(argv[1], "/");
+	}
 	else
 	{
 		printf("\n%s:\n", path);
-		contents[0] = ft_strjoin(argv[0], argv[1]);
-		contents[0] = ft_strjoin(contents[0], "/");
+
+		temp = ft_strjoin(argv[0], argv[1]);
+		contents[0] = ft_strjoin(temp, "/");
+		free(temp);
 	}
 	while (dir != NULL)
 	{
@@ -90,6 +95,7 @@ void	ft_directories(char **argv, DIR *dir)
 	else
 		g_flags.r == 1 ? ft_rsort(&contents, 1, count + 1) : ft_sort(&contents, 1, count + 1);
 	free(path);
+	closedir(dir);
 	main((count + 1), contents);
 
 }
@@ -113,23 +119,24 @@ void	ft_parse_contents(char **argv, int argc)
 			perror(ft_strjoin("ft_ls: ", argv[1]));
 		}
 	}
-	if((dir = opendir(path)) != '\0' && (g_flags.R == 1 \
- 	|| strcmp(argv[0], "./ft_ls") == 0))
+	if((stats.st_mode & S_IFMT) == S_IFDIR)
 	{
-		if (g_flags.start > 2 && strcmp(argv[0], "./ft_ls") == 0)
+		if (g_flags.R == 1 || strcmp(argv[0], "./ft_ls") == 0)
 		{
-			if (g_flags.first == 0)
+			if (g_flags.start > 2 && strcmp(argv[0], "./ft_ls") == 0)
 			{
-				printf("%s:\n", path);
-				g_flags.first = 1;
+				if (g_flags.first == 0)
+				{
+					printf("%s:\n", path);
+					g_flags.first = 1;
+				} else
+					printf("\n%s:\n", path);
 			}
-			else
-				printf("\n%s:\n", path);
+			dir = opendir(path);
+			ft_directories(argv, dir);
 		}
-		ft_directories(argv, dir);
 	}
-	if(dir)
-	closedir(dir);
+	//if(dir)
 	free(path);
 	ft_next_arg(argv, argc);
 }
@@ -262,53 +269,53 @@ void	ft_get_permissions(char *argv, t_col columns, t_attr atr)
 		uid = *getpwuid(atr.stats.st_uid);
 		gid = *getgrgid(atr.stats.st_gid);
 		if(S_ISDIR(atr.stats.st_mode))
-		ft_printf("d");
+		printf("d");
 		else if (S_ISLNK(atr.stats.st_mode))
-			ft_printf("l");
+			printf("l");
 		else
-			ft_printf("-");
-		(atr.stats.st_mode & S_IRUSR) ? ft_printf("r") : ft_printf("-");
-		(atr.stats.st_mode & S_IWUSR) ? ft_printf("w") : ft_printf("-");
-		(atr.stats.st_mode & S_IXUSR) ? ft_printf("x") : ft_printf("-");
-		(atr.stats.st_mode & S_IRGRP) ? ft_printf("r") : ft_printf("-");
-		(atr.stats.st_mode & S_IWGRP) ? ft_printf("w") : ft_printf("-");
-		(atr.stats.st_mode & S_IXGRP) ? ft_printf("x") : ft_printf("-");
-		(atr.stats.st_mode & S_IROTH) ? ft_printf("r") : ft_printf("-");
-		(atr.stats.st_mode & S_IWOTH) ? ft_printf("w") : ft_printf("-");
-		(atr.stats.st_mode & S_IXOTH) ? ft_printf("x") : ft_printf("-");
+			printf("-");
+		(atr.stats.st_mode & S_IRUSR) ? printf("r") : printf("-");
+		(atr.stats.st_mode & S_IWUSR) ? printf("w") : printf("-");
+		(atr.stats.st_mode & S_IXUSR) ? printf("x") : printf("-");
+		(atr.stats.st_mode & S_IRGRP) ? printf("r") : printf("-");
+		(atr.stats.st_mode & S_IWGRP) ? printf("w") : printf("-");
+		(atr.stats.st_mode & S_IXGRP) ? printf("x") : printf("-");
+		(atr.stats.st_mode & S_IROTH) ? printf("r") : printf("-");
+		(atr.stats.st_mode & S_IWOTH) ? printf("w") : printf("-");
+		(atr.stats.st_mode & S_IXOTH) ? printf("x") : printf("-");
 		if (atr.xattr > 0)
-			ft_printf("@ ");
+			printf("@ ");
 		else if (atr.acl)
-			ft_printf("+ ");
+			printf("+ ");
 		else
-			ft_printf("  ");
-		ft_printf("%*d ", columns.links, atr.stats.st_nlink);
-		ft_printf("%*-s  ", columns.user, uid.pw_name);
-		ft_printf("%*-s  ", columns.group, gid.gr_name);
-		ft_printf("%*lld ", columns.f_size, atr.stats.st_size);
-		ft_printf("%s ", file_time = ft_time(atr.stats.st_ctimespec.tv_sec));
+			printf("  ");
+		printf("%*d ", columns.links, atr.stats.st_nlink);
+		printf("%*-s  ", columns.user, uid.pw_name);
+		printf("%*-s  ", columns.group, gid.gr_name);
+		printf("%*lld ", columns.f_size, atr.stats.st_size);
+		printf("%s ", file_time = ft_time(atr.stats.st_ctimespec.tv_sec));
 		free(file_time);
 	}
-	ft_printf("%s", argv);
+	printf("%s", argv);
 	if (S_ISLNK(atr.stats.st_mode))
 	{
-		ft_printf(" -> %s", atr.buffer);
+		printf(" -> %s", atr.buffer);
 		free(atr.buffer);
 	}
-	ft_printf("\n");
+	printf("\n");
 	if (atr.xattr > 0)
 	{
 		ptr = atr.name;
 		while (*atr.name)
 		{
-			ft_printf("        ");
+			printf("        ");
 
 			while (*atr.name)
 			{
-				ft_printf("%c", *atr.name);
+				printf("%c", *atr.name);
 				atr.name++;
 			}
-			ft_printf("\n");
+			printf("\n");
 			atr.name++;
 		}
 		free(ptr);
@@ -478,11 +485,13 @@ void	ft_single(void)
 		ft_sort_time(&contents, 1, count + 1);
 	else
 		g_flags.r == 1 ? ft_rsort(&contents, 1, count + 1) : ft_sort(&contents, 1, count + 1);
+	closedir(dir);
 	main((count + 1), contents);
 }
 
 int main(int argc, char **argv)
 {
+	printf("Test %20\n", "string");
 	struct winsize	win;
 	char **temp;
 	if (ft_strcmp(argv[0], "./ft_ls") == 0)
@@ -518,9 +527,12 @@ int main(int argc, char **argv)
 			ft_scale_window(argc, argv, ft_max_width(argv, argc, win));
 	}
 	if (argc >= 2)
+	{
 		ft_parse_contents(argv, argc);
+		free(argv[1]);
+	}
 	free(argv[0]);
-	free(argv[1]);
+//	free(argv[1]);
 	free(argv);
 	//while(1);
 	return (0);

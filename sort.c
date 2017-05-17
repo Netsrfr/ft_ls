@@ -12,6 +12,9 @@
 
 #include "ft_ls.h"
 
+
+//TODO: Large recursive does not leak unless using -l flag; track leak
+
 void	ft_rsort(char ***argv, int i, int size)
 {
 	char	*temp;
@@ -33,18 +36,21 @@ void	ft_sort(char ***argv, int i, int size)
 {
 	char	*temp;
 
-	if(ft_strcmp((*argv)[i], (*argv)[i + 1]) > 0)
+	if(i + 1 < size - 1)
 	{
-		temp = ft_strdup((*argv)[i]);
-		free((*argv)[i]);
-		(*argv)[i] = ft_strdup((*argv)[i + 1]);
-		free((*argv)[i + 1]);
-		(*argv)[i + 1] = ft_strdup(temp);
-		free(temp);
-		ft_sort(argv, 1, size);
+		if (ft_strcmp((*argv)[i], (*argv)[i + 1]) > 0)
+		{
+			temp = ft_strdup((*argv)[i]);
+			free((*argv)[i]);
+			(*argv)[i] = ft_strdup((*argv)[i + 1]);
+			free((*argv)[i + 1]);
+			(*argv)[i + 1] = ft_strdup(temp);
+			free(temp);
+			ft_sort(argv, 1, size);
+		}
+		if (i + 1 < size - 1)
+			ft_sort(argv, i + 1, size);
 	}
-	if (i + 1 < size - 1)
-		ft_sort(argv, i + 1, size);
 }
 
 void	ft_sort_time(char ***argv, int i, int size)

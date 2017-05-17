@@ -54,22 +54,23 @@ char	*ft_putwidth_no_p(int width, char *result)
 	return (result);
 }
 
-char	*ft_putwidth_string(int width, char *result)
+void	ft_putwidth_string(int width, char **result)
 {
 	int	strlen;
 
-	strlen = (int)ft_strlen(result);
+	strlen = (int)ft_strlen(*result);
+
 	while (width > strlen && g_fl.minus == 0)
 	{
-		result = ft_strjoin(" ", result);
+		*result = ft_strjoin(" ", *result);
+
 		width--;
 	}
 	while (width > strlen && g_fl.minus == 1)
 	{
-		result = ft_strjoin(result, " ");
+		*result = ft_strjoin(*result, " ");
 		width--;
 	}
-	return (result);
 }
 
 char	*ft_put_precision(char *result, int precision)
