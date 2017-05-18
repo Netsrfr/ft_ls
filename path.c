@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                            :+:      :+:    :+:   */
+/*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpfeffer <jpfeffer@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-char *ft_add_path(char **argv)
+char	*ft_add_path(char **argv)
 {
 	char	*temp;
 
@@ -25,7 +25,7 @@ char *ft_add_path(char **argv)
 	return (temp);
 }
 
-char *ft_add_path_single(char *argv0, char *argv1)
+char	*ft_add_path_single(char *argv0, char *argv1)
 {
 	char	*temp;
 

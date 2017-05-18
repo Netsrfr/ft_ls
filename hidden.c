@@ -53,5 +53,5 @@ int	ft_remove_hidden(char **argv, int argc)
 		}
 		i++;
 	}
-	return(argc);
+	return (argc);
 }

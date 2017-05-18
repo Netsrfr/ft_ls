@@ -18,7 +18,6 @@ char	*ft_strjoin(char const *dest, char const *src)
 	int		i;
 	int		n;
 
-
 	i = -1;
 	n = -1;
 	if (!(result = (char*)ft_memalloc(ft_strlen(dest) + ft_strlen(src) + 1)))

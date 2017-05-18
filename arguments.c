@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   arguments.c                                            :+:      :+:    :+:   */
+/*   arguments.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpfeffer <jpfeffer@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,15 +12,13 @@
 
 #include "ft_ls.h"
 
-int	ft_get_arguments(char **argv, int *argc)
+int		ft_get_arguments(char **argv, int *argc)
 {
 	int		i;
-	i = 1;
-	while (i < *argc && argv[i][0] == '-')
-	{
+
+	i = 0;
+	while (i++ < *argc && argv[i][0] == '-')
 		ft_parse_flags(argv[i]);
-		i++;
-	}
 	i = 1;
 	if (g_flags.flag != 0)
 	{
@@ -30,7 +28,7 @@ int	ft_get_arguments(char **argv, int *argc)
 			argv[i] = ft_strdup(argv[i + g_flags.flag]);
 			i++;
 		}
-		while(i < *argc)
+		while (i < *argc)
 		{
 			free(argv[i]);
 			i++;
@@ -43,9 +41,9 @@ int	ft_get_arguments(char **argv, int *argc)
 
 void	ft_clear_invalid(char **argv, int *argc, int i)
 {
-	perror(ft_strjoin("ft_ls: ", argv[i]));
+	ft_print_error(argv[i]);
 	if (*argc == 2)
-		exit (0);
+		exit(0);
 	while (i + 1 < *argc)
 	{
 		free(argv[i]);
@@ -74,7 +72,7 @@ void	ft_args(char **argv, int *argc)
 			if ((stats.st_mode & S_IFMT) == S_IFDIR)
 			{
 				errno = 13;
-				perror(ft_strjoin("ft_ls: ", argv[i]));
+				ft_print_error(argv[i]);
 			}
 		i++;
 	}

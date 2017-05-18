@@ -53,3 +53,12 @@ void	ft_handler_octal(va_list ap)
 	else
 		ft_conversion_o(va_arg(ap, unsigned int));
 }
+
+void	ft_join(char **result, const char *s1, const char *s2)
+{
+	char	*temp;
+
+	temp	= *result;
+	*result = ft_strjoin(s1, s2);
+	free(temp);
+}

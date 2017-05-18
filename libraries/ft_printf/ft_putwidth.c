@@ -18,22 +18,22 @@ char	*ft_putwidth(int width, char *result)
 		width--;
 	result = ft_put_precision(result, g_fl.precision_v);
 	if (g_fl.plus == 1 && g_fl.neg == 0 && g_fl.width == 1 && g_fl.zero == 0)
-		result = ft_strjoin("+", result);
+		ft_join(&result, "+", result);
 	if (g_fl.neg == 1 && g_fl.zero == 0)
-		result = ft_strjoin("-", result);
+		ft_join(&result, "-", result);
 	width = (g_fl.neg == 1 && g_fl.zero == 1) ?
 		(width - (int)ft_strlen(result)) - 1 : width - (int)ft_strlen(result);
 	while (width > 0 && g_fl.minus == 0)
 	{
-		result = (g_fl.zero == 1 && g_fl.precision == 0) ?
-				ft_strjoin("0", result) : ft_strjoin(" ", result);
+		(g_fl.zero == 1 && g_fl.precision == 0) ?
+				ft_join(&result, "0", result) : ft_join(&result, " ", result);
 		width--;
 	}
 	if (g_fl.neg == 1 && g_fl.zero == 1)
 		result = ft_strjoin("-", result);
 	while (width > 0 && g_fl.minus == 1)
 	{
-		result = ft_strjoin(result, " ");
+		ft_join(&result, result, " ");
 		width--;
 	}
 	return (result);
@@ -57,13 +57,15 @@ char	*ft_putwidth_no_p(int width, char *result)
 void	ft_putwidth_string(int width, char **result)
 {
 	int	strlen;
+	char *temp;
 
 	strlen = (int)ft_strlen(*result);
 
 	while (width > strlen && g_fl.minus == 0)
 	{
+		temp = *result;
 		*result = ft_strjoin(" ", *result);
-
+		free(temp);
 		width--;
 	}
 	while (width > strlen && g_fl.minus == 1)

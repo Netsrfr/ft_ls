@@ -48,6 +48,7 @@ ssize_t				g_return;
 char				*g_print;
 int					p_flag;
 
+
 ssize_t				ft_printf(const char *format, ...);
 void				flag_init(void);
 char				*ft_flags(char *progress, va_list arguments);
@@ -78,6 +79,7 @@ int					ft_conversion_o(uintmax_t argument);
 void				ft_handler_decimal(va_list ap);
 void				ft_handler_unsigned(va_list ap);
 void				ft_handler_octal(va_list ap);
+void				ft_join(char **result, const char *s1, const char *s2);
 
 char				*ft_putwidth(int width,
 								char *result);

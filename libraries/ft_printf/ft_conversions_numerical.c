@@ -29,7 +29,6 @@ char	*ft_spaces(char *result, int strlen)
 int		ft_conversion_d(intmax_t argument)
 {
 	char	*result;
-	char	*ptr;
 
 	if (argument < 0)
 	{

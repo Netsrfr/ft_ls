@@ -12,7 +12,8 @@
 
 LS = ft_ls
 
-C_FILES = ft_ls.c path.c sort.c arguments.c hidden.c
+C_FILES = ft_ls.c path.c sort.c arguments.c hidden.c print.c print2.c xattr.c \
+utility.c directories.c
 
 LIBFT		=	./libft/libft.a
 PRINTF		=	./libraries/ft_printf/libftprintf.a
@@ -52,10 +53,10 @@ $(LS):
 	@gcc $(C_FLAGS) $(LIBLINK) $(SRCS) -o ft_ls
 
 test: fclean library
-	@gcc $(SRCS) $(LIBLINK) $(FRAMEWORK) main.c -o ft_ls
+	@gcc $(SRCS) $(LIBLINK) $(FRAMEWORK) -o ft_ls
 
 ftest: fclean library
-	@gcc $(SRCS) $(LIBLINK) $(FRAMEWORK) -fsanitize=address main.c -o ft_ls
+	@gcc $(SRCS) $(LIBLINK) $(FRAMEWORK) -fsanitize=address -o ft_ls
 
 clean:
 	@make clean -C ./libft
