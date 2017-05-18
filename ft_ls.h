@@ -66,6 +66,8 @@ t_flags 	g_flags;
 blkcnt_t	total;
 int			blk_print;
 
+void	ft_sort_optimize(char ***argv, int i, int size);
+
 int						main(int argc, char **argv);
 
 /*
@@ -80,6 +82,7 @@ int						ft_parse_flags(char *arg);
 /*
 ** sort.c
 */
+void	ft_sort_wrapper(char ***argv, int i, int size);
 void	ft_sort(char ***argv, int i, int size);
 void	ft_rsort(char ***argv, int i, int size);
 void	ft_sort_time(char ***argv, int i, int size);

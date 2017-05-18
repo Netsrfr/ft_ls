@@ -12,6 +12,45 @@
 
 #include "ft_ls.h"
 
+void	ft_read_dir_large(DIR *dir, int *count, char ***contents)
+{
+	struct dirent	*directory;
+
+	while (dir != NULL)
+	{
+		if ((directory = readdir(dir)) != NULL)
+		{
+			(*contents)[*count + 1] = ft_strdup(directory->d_name);
+			(*count)++;
+		}
+		else
+			break ;
+	}
+	closedir(dir);
+}
+
+void	ft_large_dir(int *count, char ***contents)
+{
+	char	**temp;
+	int	i;
+	int	j;
+
+	i = 1;
+	while (i < *count - 10)
+	{
+		j = 1;
+		temp = ft_memalloc(sizeof(char*) * 100);
+		temp[0] = ft_strdup((*contents)[0]);
+		while (j < 100 && i < *count - 10)
+		{
+			temp[j] = ft_strdup((*contents)[i]);
+			i++;
+			j++;
+		}
+		main(j - 10, temp);
+	}
+}
+
 void	ft_directories(char **argv, DIR *dir)
 {
 	char			**contents;
@@ -31,13 +70,20 @@ void	ft_directories(char **argv, DIR *dir)
 		contents[0] = ft_strjoin(temp, "/");
 		free(temp);
 	}
-	ft_read_dir(dir, &count, &contents);
-	if (g_flags.t == 1)
-		ft_sort_time(&contents, 1, count + 1);
+	if (g_flags.one == 0)
+		ft_read_dir(dir, &count, &contents);
 	else
-		g_flags.r == 1 ? ft_rsort(&contents, 1, count + 1) \
-		: ft_sort(&contents, 1, count + 1);
+		ft_read_dir_large(dir, &count, &contents);
+
+	else
+	{
+		ft_sort_wrapper(&contents, 1, count + 1);
+
+	}
 	free(path);
+	if (g_flags.one == 1)
+		ft_large_dir(&count, &contents);
+	printf("TEST-NO!");
 	main((count + 1), contents);
 }
 

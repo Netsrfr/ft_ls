@@ -12,6 +12,20 @@
 
 #include "ft_ls.h"
 
+//:TODO Create reverse optimizer, replace sort requests with wrapper, test large
+
+void	ft_sort_wrapper(char ***argv, int i, int size)
+{
+	if (size > 3)
+	ft_sort_optimize(argv, 1, size);
+	if (g_flags.r == 1)
+		ft_rsort(argv, 1, size);
+	else if (g_flags.t == 1)
+		ft_sort_time(argv, 1, size);
+	else
+		ft_sort(argv, 1, size);
+}
+
 void	ft_rsort(char ***argv, int i, int size)
 {
 	char	*temp;
@@ -27,6 +41,33 @@ void	ft_rsort(char ***argv, int i, int size)
 	}
 	if (i + 1 < size - 1)
 		ft_rsort(argv, i + 1, size);
+}
+
+void	ft_sort_optimize(char ***argv, int i, int size)
+{
+	char ***temp;
+	int ch;
+	int j;
+
+	ch = 32;
+	temp = ft_memalloc(sizeof(char**));
+	*temp = ft_memalloc(sizeof(char*) * size + 1);
+	(*temp)[0] = ft_strdup((*argv)[0]);
+	while (ch <= 126)
+	{
+			j = 1;
+			while (j < size)
+			{
+				if ((*argv)[j][0] == ch)
+				{
+					(*temp)[i] = ft_strdup((*argv)[j]);
+					i++;
+				}
+				j++;
+			}
+		ch++;
+	}
+	*argv = *temp;
 }
 
 void	ft_sort(char ***argv, int i, int size)
@@ -46,7 +87,12 @@ void	ft_sort(char ***argv, int i, int size)
 			ft_sort(argv, 1, size);
 		}
 		if (i + 1 < size - 1)
+		{
+
+			//ft_printf()
 			ft_sort(argv, i + 1, size);
+		}
+
 	}
 }
 
