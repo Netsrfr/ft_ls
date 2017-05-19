@@ -14,6 +14,48 @@
 
 //:TODO Create reverse optimizer, replace sort requests with wrapper, test large
 
+void	ft_quicksort(char ***argv, int start, int size)
+{
+	int progress;
+	int i;
+	int j;
+	char *temp;
+
+	if(start < size)
+	{
+		progress = start;
+		i = start;
+		j = size;
+		while (i < j)
+		{
+			while (ft_strcmp((*argv)[i], (*argv)[progress]) <= 0 && i < size)
+			{
+				i++;
+			}
+			while (ft_strcmp((*argv)[j], (*argv)[progress]) > 0 && j > start)
+				j--;
+
+			if (i < j)
+			{
+				temp = ft_strdup((*argv)[i]);
+				free((*argv)[i]);
+				(*argv)[i] = ft_strdup((*argv)[j]);
+				free((*argv)[j]);
+				(*argv)[j] = ft_strdup(temp);
+				free(temp);
+			}
+		}
+		temp = ft_strdup((*argv)[j]);
+		free((*argv)[j]);
+		(*argv)[j] = ft_strdup((*argv)[progress]);
+		free((*argv)[progress]);
+		(*argv)[progress] = ft_strdup(temp);
+		free(temp);
+		ft_quicksort(argv, start, j - 1);
+		ft_quicksort(argv, j + 1, size);
+	}
+}
+
 void	ft_sort_large(char ***argv, int size)
 {
 	int i;
@@ -30,7 +72,7 @@ void	ft_sort_large(char ***argv, int size)
 			else if (g_flags.t == 1)
 				ft_sort_time(argv, 1, i * 100);
 			else
-				ft_sort(argv, j - 99, i * 100);
+				ft_quicksort(argv, 1, i * 100);
 			i++;
 		}
 		j += 100;
@@ -41,14 +83,15 @@ void	ft_sort_wrapper(char ***argv, int size)
 {
 	if (size > 3 )
 		ft_sort_optimize(argv, 1, size);
-	//if (size > 250)
-		//ft_sort_large(argv, size);
+	if (size > 250)
+		ft_sort_large(argv, size);
 	if (g_flags.r == 1)
 		ft_rsort(argv, 1, size);
 	else if (g_flags.t == 1)
 		ft_sort_time(argv, 1, size);
 	else
-		ft_sort(argv, 1, size);
+		ft_quicksort(argv, 1, size - 1);
+
 }
 
 void	ft_rsort(char ***argv, int i, int size)
