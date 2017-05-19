@@ -14,10 +14,35 @@
 
 //:TODO Create reverse optimizer, replace sort requests with wrapper, test large
 
-void	ft_sort_wrapper(char ***argv, int i, int size)
+void	ft_sort_large(char ***argv, int size)
 {
-	if (size > 3)
-	ft_sort_optimize(argv, 1, size);
+	int i;
+	int	j;
+
+	i = 1;
+	j = 100;
+	while ((j / 100) * (i * 100) < size)
+	{
+		while (i * 100 < size)
+		{
+			if (g_flags.r == 1)
+				ft_rsort(argv, 1, i * 100);
+			else if (g_flags.t == 1)
+				ft_sort_time(argv, 1, i * 100);
+			else
+				ft_sort(argv, j - 99, i * 100);
+			i++;
+		}
+		j += 100;
+	}
+}
+
+void	ft_sort_wrapper(char ***argv, int size)
+{
+	if (size > 3 )
+		ft_sort_optimize(argv, 1, size);
+	//if (size > 250)
+		//ft_sort_large(argv, size);
 	if (g_flags.r == 1)
 		ft_rsort(argv, 1, size);
 	else if (g_flags.t == 1)
@@ -41,6 +66,33 @@ void	ft_rsort(char ***argv, int i, int size)
 	}
 	if (i + 1 < size - 1)
 		ft_rsort(argv, i + 1, size);
+}
+
+void	ft_rsort_optimize(char ***argv, int i, int size)
+{
+	char ***temp;
+	int ch;
+	int j;
+
+	ch = 126;
+	temp = ft_memalloc(sizeof(char**));
+	*temp = ft_memalloc(sizeof(char*) * size + 1);
+	(*temp)[0] = ft_strdup((*argv)[0]);
+	while (ch >= 32)
+	{
+		j = 1;
+		while (j < size)
+		{
+			if ((*argv)[j][0] == ch)
+			{
+				(*temp)[i] = ft_strdup((*argv)[j]);
+				i++;
+			}
+			j++;
+		}
+		ch--;
+	}
+	*argv = *temp;
 }
 
 void	ft_sort_optimize(char ***argv, int i, int size)
@@ -67,14 +119,45 @@ void	ft_sort_optimize(char ***argv, int i, int size)
 			}
 		ch++;
 	}
+	j = 1;
+	while (j < size)
+	{
+		if ((*argv)[j][0] < 32 || (*argv)[j][0] > 126)
+		{
+			(*temp)[i] = ft_strdup((*argv)[j]);
+			i++;
+		}
+		j++;
+	}
+	ft_free_array(argv, size);
 	*argv = *temp;
+}
+
+void	ft_sequential_sort(char ***argv, int i, int size)
+{
+	char	*temp;
+
+	while(i + 1 < size)
+	{
+		if (ft_strcmp((*argv)[i], (*argv)[i + 1]) > 0)
+		{
+			temp = ft_strdup((*argv)[i]);
+			free((*argv)[i]);
+			(*argv)[i] = ft_strdup((*argv)[i + 1]);
+			free((*argv)[i + 1]);
+			(*argv)[i + 1] = ft_strdup(temp);
+			free(temp);
+			i = 1;
+		}
+		i++;
+	}
 }
 
 void	ft_sort(char ***argv, int i, int size)
 {
 	char	*temp;
 
-	if(i + 1 < size)
+	if(i + 1 < size && i < 600)
 	{
 		if (ft_strcmp((*argv)[i], (*argv)[i + 1]) > 0)
 		{
@@ -88,8 +171,6 @@ void	ft_sort(char ***argv, int i, int size)
 		}
 		if (i + 1 < size - 1)
 		{
-
-			//ft_printf()
 			ft_sort(argv, i + 1, size);
 		}
 

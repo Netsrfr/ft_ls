@@ -69,6 +69,8 @@ int			blk_print;
 void	ft_sort_optimize(char ***argv, int i, int size);
 
 int						main(int argc, char **argv);
+void	ft_free_array(char ***array, int size);
+
 
 /*
 ** utility.c
@@ -82,7 +84,7 @@ int						ft_parse_flags(char *arg);
 /*
 ** sort.c
 */
-void	ft_sort_wrapper(char ***argv, int i, int size);
+void	ft_sort_wrapper(char ***argv, int size);
 void	ft_sort(char ***argv, int i, int size);
 void	ft_rsort(char ***argv, int i, int size);
 void	ft_sort_time(char ***argv, int i, int size);

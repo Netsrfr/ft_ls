@@ -12,6 +12,19 @@
 
 #include "ft_ls.h"
 
+void	ft_free_array(char ***array, int size)
+{
+	int i;
+
+	i = 0;
+	while (i < size)
+	{
+		free((*array)[i]);
+		i++;
+	}
+	free((*array));
+}
+
 static struct winsize	ft_max_width(char **argv, int argc, struct winsize win)
 {
 	int		i;
