@@ -12,6 +12,18 @@
 
 #include "ft_ls.h"
 
+void	ft_swap(char ***argv, int i, int j)
+{
+	char *temp;
+
+	temp = ft_strdup((*argv)[i]);
+	free((*argv)[i]);
+	(*argv)[i] = ft_strdup((*argv)[j]);
+	free((*argv)[j]);
+	(*argv)[j] = ft_strdup(temp);
+	free(temp);
+}
+
 char	*ft_add_path(char **argv)
 {
 	char	*temp;

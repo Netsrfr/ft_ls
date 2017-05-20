@@ -59,6 +59,8 @@ typedef struct			s_attr
 	acl_t		acl;
 	char		*buffer;
 	char		*name;
+	struct passwd	uid;
+	struct group	gid;
 
 }						t_attr;
 
@@ -66,10 +68,23 @@ t_flags 	g_flags;
 blkcnt_t	total;
 int			blk_print;
 
-void	ft_sort_optimize(char ***argv, int i, int size);
-
 int						main(int argc, char **argv);
-void	ft_free_array(char ***array, int size);
+
+/*
+** arguments.c
+*/
+int		ft_get_arguments(char **argv, int *argc);
+void	ft_clear_invalid(char **argv, int *argc, int i);
+void	ft_args(char **argv, int *argc);
+void	ft_next_arg(char **argv, int argc);
+
+/*
+** directories.c
+*/
+void	ft_directories(char **argv, DIR *dir);
+void	ft_read_dir(DIR *dir, int *count, char ***contents);
+void	ft_parse_contents(char **argv, int argc);
+void	ft_single(void);
 
 
 /*
@@ -79,7 +94,7 @@ void					ft_print_error(char *argv);
 char					**ft_init_contents(char *argv);
 size_t					ft_count_files(char *argv);
 void					ft_init_attributes(t_attr *attributes, t_col *columns);
-int						ft_parse_flags(char *arg);
+void					ft_parse_flags(char *arg);
 
 /*
 ** sort.c
@@ -87,13 +102,19 @@ int						ft_parse_flags(char *arg);
 void	ft_sort_wrapper(char ***argv, int size);
 void	ft_sort(char ***argv, int i, int size);
 void	ft_rsort(char ***argv, int i, int size);
-void	ft_sort_time(char ***argv, int i, int size);
+
+/*
+** time.c
+*/
+void	ft_qsort_time(char ***argv, int start, int size);
+void	ft_rqsort_time(char ***argv, int start, int size);
 char	*ft_parse_time(char *file_time, char *current, char *result, int i);
 char	*ft_time(time_t tse);
 
 /*
 ** path.c
 */
+void	ft_swap(char ***argv, int i, int j);
 char *ft_add_path(char **argv);
 char *ft_add_path_single(char *argv0, char *argv1);
 
@@ -103,13 +124,6 @@ char *ft_add_path_single(char *argv0, char *argv1);
 int	ft_hidden(char **argv, int argc);
 int	ft_remove_hidden(char **argv, int argc);
 
-/*
-** arguments.c
-*/
-int	ft_get_arguments(char **argv, int *argc);
-void	ft_clear_invalid(char **argv, int *argc, int i);
-void	ft_args(char **argv, int *argc);
-void	ft_next_arg(char **argv, int argc);
 
 /*
 ** print.c
@@ -124,16 +138,12 @@ t_col	ft_columns(char **argv, int argc, struct stat stats);
 void	ft_print_contents_simple(int argc, char **argv);
 void	ft_print_path(char **argv, char *path);
 
-/*
-** directories.c
-*/
-void	ft_directories(char **argv, DIR *dir);
-void	ft_read_dir(DIR *dir, int *count, char ***contents);
-void	ft_parse_contents(char **argv, int argc);
+
 
 /*
 ** xattr.c
 */
+int			ft_files(char *argv);
 void	ft_get_permissions(char *argv, t_col columns, t_attr atr);
-void	ft_print_permissions(t_attr atr);
+void	ft_print_type(t_attr atr);
 #endif

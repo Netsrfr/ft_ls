@@ -12,19 +12,6 @@
 
 #include "ft_ls.h"
 
-void	ft_free_array(char ***array, int size)
-{
-	int i;
-
-	i = 0;
-	while (i < size)
-	{
-		free((*array)[i]);
-		i++;
-	}
-	free((*array));
-}
-
 static struct winsize	ft_max_width(char **argv, int argc, struct winsize win)
 {
 	int		i;
@@ -43,36 +30,56 @@ static struct winsize	ft_max_width(char **argv, int argc, struct winsize win)
 	return (win);
 }
 
-void					ft_single(void)
+void	ft_parse_reg(char **argv, int argc, int count)
 {
-	DIR				*dir;
-	struct dirent	*directory;
-	char			**c;
-	int				count;
+	struct stat	stats;
+	char **contents;
+	char *path;
+	int i;
+	int j;
 
-	count = 0;
-	dir = opendir(".");
-	c = ft_init_contents("./");
-	c[0] = ft_strdup("./");
-	while (dir != NULL)
+	i = 1;
+	j = 1;
+	contents = ft_memalloc(sizeof(char*) * count + 1);
+	contents[0] = ft_strdup("./");
+	while (i < argc)
 	{
-		if ((directory = readdir(dir)) != NULL)
+		path = ft_add_path_single("./", argv[i]);
+		lstat(path, &stats);
+		if (S_ISREG(stats.st_mode))
 		{
-			c[count + 1] = ft_strdup(directory->d_name);
-			count++;
+			contents[j] = ft_strdup(argv[i]);
+			j++;
 		}
-		else
-			break ;
+		free(path);
+		i++;
 	}
-	if (g_flags.t == 1)
-		ft_sort_time(&c, 1, count + 1);
-	else
-		g_flags.r == 1 ? ft_rsort(&c, 1, count + 1) : ft_sort(&c, 1, count + 1);
-	closedir(dir);
-	main((count + 1), c);
+	main(count + 1, contents);
 }
 
-void					ft_parse_arg(int argc, char **argv, struct winsize win)
+void	ft_print_files(char **argv, int argc)
+{
+	struct stat	stats;
+	char		*path;
+	int			i;
+	int			count;
+
+	count = 0;
+	i = 1;
+	while (i < argc)
+	{
+			path = ft_add_path_single("./", argv[i]);
+			lstat(path, &stats);
+				if (S_ISREG(stats.st_mode))
+					count++;
+			free(path);
+		i++;
+	}
+	ft_parse_reg(argv, argc, count);
+
+}
+
+static void				ft_parse_arg(int argc, char **argv, struct winsize win)
 {
 	if (argc == 1 && (ft_strcmp(argv[0], "./ft_ls") == 0))
 		ft_single();
@@ -81,6 +88,8 @@ void					ft_parse_arg(int argc, char **argv, struct winsize win)
 		ft_args(argv, &argc);
 		if (argc == 1)
 			ft_single();
+		else if (g_flags.l == 0)
+			ft_print_files(argv, argc);
 	}
 	if (argc >= 2 && (ft_strcmp(argv[0], "./ft_ls") != 0))
 	{
@@ -104,8 +113,10 @@ int						main(int argc, char **argv)
 	char			**temp;
 	struct winsize	win;
 	int				i;
-
 	ioctl(0, TIOCGWINSZ, &win);
+
+	if (ft_files(argv[0]) == 0)
+		return (0);
 	if (ft_strcmp(argv[0], "./ft_ls") == 0)
 	{
 		temp = ft_memalloc(sizeof(char *) * argc);

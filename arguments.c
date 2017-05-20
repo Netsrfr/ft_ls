@@ -17,7 +17,7 @@ int		ft_get_arguments(char **argv, int *argc)
 	int		i;
 
 	i = 0;
-	while (i++ < *argc && argv[i][0] == '-')
+	while (++i < *argc && argv[i][0] == '-')
 		ft_parse_flags(argv[i]);
 	i = 1;
 	if (g_flags.flag != 0)
@@ -76,10 +76,7 @@ void	ft_args(char **argv, int *argc)
 			}
 		i++;
 	}
-	if (g_flags.t == 1 && *argc > 2)
-		ft_sort_time(&argv, 1, *argc);
-	if (*argc > 2)
-		g_flags.r == 1 ? ft_rsort(&argv, 1, *argc) : ft_sort(&argv, 1, *argc);
+	ft_sort_wrapper(&argv, *argc);
 }
 
 void	ft_next_arg(char **argv, int argc)

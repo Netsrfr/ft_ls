@@ -12,34 +12,35 @@
 
 #include "ft_ls.h"
 
-size_t ft_count_files(char *argv)
+size_t	ft_count_files(char *argv)
 {
-	DIR	*dir;
-	size_t count;
-	count = 1;
+	DIR		*dir;
+	size_t	count;
 
+	count = 1;
 	dir = opendir(argv);
 	while (dir != NULL)
 	{
-		if(readdir(dir) != NULL)
+		if (readdir(dir) != NULL)
 			count++;
 		else
-			break;
+			break ;
 	}
 	closedir(dir);
 	return (count);
 }
 
-int	ft_parse_flags(char *arg)
+
+void	ft_parse_flags(char *arg)
 {
 	int	i;
 
 	i = 1;
 	g_flags.flag++;
-	while(arg[i])
+	while (arg[i])
 	{
 		if (arg[i] == 'l')
-			g_flags.l   = 1;
+			g_flags.l = 1;
 		else if (arg[i] == 'R')
 			g_flags.R = 1;
 		else if (arg[i] == 'a')
@@ -52,9 +53,11 @@ int	ft_parse_flags(char *arg)
 			g_flags.one = 1;
 		else if (arg[i] == '@')
 			g_flags.at = 1;
+		else
+			ft_printf("flag '%c' invalid: resuming with valid flag(s)\n", \
+			arg[i]);
 		i++;
 	}
-	return (0);
 }
 
 void	ft_init_attributes(t_attr *attributes, t_col *columns)
@@ -80,6 +83,7 @@ char	**ft_init_contents(char *argv)
 void	ft_print_error(char *argv)
 {
 	char *err;
+
 	perror(err = ft_strjoin("ft_ls: ", argv));
 	free(err);
 }
