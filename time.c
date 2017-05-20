@@ -26,7 +26,7 @@ static int	ft_compare_time(char **argv, int i, int j)
 	free(path);
 	if (stats.st_mtimespec.tv_sec == stats2.st_mtimespec.tv_sec)
 	{
-		if (stats.st_mtimespec.tv_nsec <= stats2.st_mtimespec.tv_nsec)
+		if (stats.st_mtimespec.tv_nsec < stats2.st_mtimespec.tv_nsec)
 			return (1);
 		else
 			return (0);
@@ -48,12 +48,10 @@ void		ft_qsort_time(char ***argv, int start, int size)
 		progress = start;
 		i = start;
 		j = size;
-		while (i < j - 1)
+		while (i < j)
 		{
 			while (ft_compare_time(*argv, i, progress) == 0 && i < size)
-			{
 				i++;
-			}
 			while (ft_compare_time(*argv, j, progress) == 1 && j > start)
 				j--;
 			if (i < j)
@@ -76,7 +74,7 @@ void		ft_rqsort_time(char ***argv, int start, int size)
 		progress = start;
 		i = start;
 		j = size;
-		while (i < j - 1)
+		while (i < j)
 		{
 			while (ft_compare_time(*argv, i, progress) == 1 && i < size)
 			{

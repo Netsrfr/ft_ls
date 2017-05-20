@@ -25,7 +25,7 @@ SRCS = $(C_FILES)
 
 C_FLAGS = -Wall -Werror -Wextra
 
-.PHONY: all library libft printf gnl test clean cleanmlx fclean re
+.PHONY: all library libft printf gnl test clean cleanmlx fclean o
 
 all: library $(LS)
 
@@ -49,7 +49,7 @@ gnl: $(GNL)
 $(GNL):
 	@make -C ./libraries/get_next_line
 
-$(LS):
+$(LS): $(C_FILES) ft_ls.h
 	@gcc $(C_FLAGS) $(LIBLINK) $(SRCS) -o ft_ls
 
 test: fclean library
@@ -69,4 +69,4 @@ fclean: clean
 	@make fclean -C ./libraries/ft_printf
 	@make fclean -C ./libraries/get_next_line
 
-re: fclean all
+o: fclean all

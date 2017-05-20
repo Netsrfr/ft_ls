@@ -31,9 +31,9 @@ clean:
 fclean: clean
 	@rm -rf $(NAME)
 
-re: fclean all
+o: fclean all
 
-test: re
+test: o
 	make fclean
 
-.PHONY: all clean fclean re make test
+.PHONY: all clean fclean o make test

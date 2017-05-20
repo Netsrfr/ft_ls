@@ -71,8 +71,8 @@ static void	ft_rsort_optimize(char ***argv, int i, int size)
 	int		j;
 
 	ch = 126;
-	temp = ft_memalloc(sizeof(char**));
-	*temp = ft_memalloc(sizeof(char*) * size + 1);
+	temp = ft_memalloc(sizeof(char **));
+	*temp = ft_memalloc(sizeof(char *) * size + 1);
 	(*temp)[0] = ft_strdup((*argv)[0]);
 	while (ch >= 32)
 	{

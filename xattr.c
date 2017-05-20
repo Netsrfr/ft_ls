@@ -48,7 +48,7 @@ static void	ft_print_type(t_attr atr)
 {
 	if (g_blk_print == 0)
 	{
-		ft_printf("g_total %d\n", g_total);
+		ft_printf("total %d\n", g_total);
 		g_blk_print = 1;
 	}
 	if (S_ISDIR(atr.stats.st_mode))

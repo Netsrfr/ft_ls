@@ -28,7 +28,7 @@ char	*ft_add_path(char **argv)
 {
 	char	*temp;
 
-	if (strcmp(argv[0], "./ft_ls") == 0)
+	if (strcmp(argv[0], "./ft_ls") == 0 || argv[1][0] == '/')
 		temp = ft_strdup(argv[1]);
 	else
 	{
@@ -41,11 +41,9 @@ char	*ft_add_path_single(char *argv0, char *argv1)
 {
 	char	*temp;
 
-	if (strcmp(argv0, "./ft_ls") == 0)
-		return (argv1);
+	if (strcmp(argv0, "./ft_ls") == 0 || argv1[0] == '/')
+		temp = ft_strdup(argv1);
 	else
-	{
 		temp = ft_strjoin(argv0, argv1);
-	}
 	return (temp);
 }
