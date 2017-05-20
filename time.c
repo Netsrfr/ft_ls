@@ -77,7 +77,7 @@ void		ft_rqsort_time(char ***argv, int start, int size)
 		progress = start;
 		i = start;
 		j = size;
-		while (i < j)
+		while (i < j - 1)
 		{
 			while (ft_compare_time(*argv, i, progress) == 1 && i < size)
 			{
