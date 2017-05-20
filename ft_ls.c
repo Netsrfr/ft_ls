@@ -30,13 +30,13 @@ static struct winsize	ft_max_width(char **argv, int argc, struct winsize win)
 	return (win);
 }
 
-void	ft_parse_reg(char **argv, int argc, int count)
+static void				ft_parse_reg(char **argv, int argc, int count)
 {
 	struct stat	stats;
-	char **contents;
-	char *path;
-	int i;
-	int j;
+	char		**contents;
+	char		*path;
+	int			i;
+	int			j;
 
 	i = 1;
 	j = 1;
@@ -57,7 +57,7 @@ void	ft_parse_reg(char **argv, int argc, int count)
 	main(count + 1, contents);
 }
 
-void	ft_print_files(char **argv, int argc)
+static void				ft_print_files(char **argv, int argc)
 {
 	struct stat	stats;
 	char		*path;
@@ -68,15 +68,14 @@ void	ft_print_files(char **argv, int argc)
 	i = 1;
 	while (i < argc)
 	{
-			path = ft_add_path_single("./", argv[i]);
-			lstat(path, &stats);
-				if (S_ISREG(stats.st_mode))
-					count++;
-			free(path);
+		path = ft_add_path_single("./", argv[i]);
+		lstat(path, &stats);
+		if (S_ISREG(stats.st_mode))
+			count++;
+		free(path);
 		i++;
 	}
 	ft_parse_reg(argv, argc, count);
-
 }
 
 static void				ft_parse_arg(int argc, char **argv, struct winsize win)
@@ -113,8 +112,8 @@ int						main(int argc, char **argv)
 	char			**temp;
 	struct winsize	win;
 	int				i;
-	ioctl(0, TIOCGWINSZ, &win);
 
+	ioctl(0, TIOCGWINSZ, &win);
 	if (ft_files(argv[0]) == 0)
 		return (0);
 	if (ft_strcmp(argv[0], "./ft_ls") == 0)

@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void	ft_qsort(char ***argv, int start, int size)
+static void	ft_qsort(char ***argv, int start, int size)
 {
 	int progress;
 	int i;
@@ -38,7 +38,7 @@ void	ft_qsort(char ***argv, int start, int size)
 	}
 }
 
-void	ft_rqsort(char ***argv, int start, int size)
+static void	ft_rqsort(char ***argv, int start, int size)
 {
 	int progress;
 	int i;
@@ -64,7 +64,7 @@ void	ft_rqsort(char ***argv, int start, int size)
 	}
 }
 
-void	ft_rsort_optimize(char ***argv, int i, int size)
+static void	ft_rsort_optimize(char ***argv, int i, int size)
 {
 	char	***temp;
 	int		ch;
@@ -91,7 +91,7 @@ void	ft_rsort_optimize(char ***argv, int i, int size)
 	*argv = *temp;
 }
 
-void	ft_sort_wrapper(char ***argv, int size)
+void		ft_sort_wrapper(char ***argv, int size)
 {
 	if (size > 3 && g_flags.r == 1 && g_flags.t == 0)
 		ft_rsort_optimize(argv, 1, size);

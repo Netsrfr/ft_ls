@@ -111,7 +111,7 @@ t_col			ft_columns(char **argv, int argc, struct stat stats)
 	{
 		path = ft_add_path_single(argv[0], argv[i]);
 		lstat(path, &stats);
-		total += stats.st_blocks;
+		g_total += stats.st_blocks;
 		free(path);
 		columns = ft_parse_stats(columns, &stats);
 		i++;

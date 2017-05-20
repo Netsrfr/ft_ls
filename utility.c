@@ -30,7 +30,6 @@ size_t	ft_count_files(char *argv)
 	return (count);
 }
 
-
 void	ft_parse_flags(char *arg)
 {
 	int	i;
@@ -42,7 +41,7 @@ void	ft_parse_flags(char *arg)
 		if (arg[i] == 'l')
 			g_flags.l = 1;
 		else if (arg[i] == 'R')
-			g_flags.R = 1;
+			g_flags.re = 1;
 		else if (arg[i] == 'a')
 			g_flags.a = 1;
 		else if (arg[i] == 'r')

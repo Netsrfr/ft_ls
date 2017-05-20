@@ -15,8 +15,8 @@
 static int	ft_compare_time(char **argv, int i, int j)
 {
 	struct stat	stats;
-	struct stat stats2;
-	char *path;
+	struct stat	stats2;
+	char		*path;
 
 	path = ft_add_path_single(argv[0], argv[i]);
 	lstat(path, &stats);
@@ -31,7 +31,6 @@ static int	ft_compare_time(char **argv, int i, int j)
 		else
 			return (0);
 	}
-
 	if (stats.st_mtimespec.tv_sec < stats2.st_mtimespec.tv_sec)
 		return (1);
 	else

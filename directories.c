@@ -63,7 +63,7 @@ void	ft_parse_contents(char **argv, int argc)
 		return ;
 	path = ft_add_path(argv);
 	lstat(path, &stats);
-	if ((!(stats.st_mode & S_IRUSR)) && g_flags.R == 1)
+	if ((!(stats.st_mode & S_IRUSR)) && g_flags.re == 1)
 	{
 		if ((stats.st_mode & S_IFMT) == S_IFDIR)
 		{

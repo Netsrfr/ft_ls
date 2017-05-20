@@ -14,7 +14,7 @@
 
 static void	ft_print_xattr(t_attr atr)
 {
-	char *ptr;
+	void *ptr;
 
 	ptr = atr.name;
 	while (*atr.name)
@@ -31,7 +31,7 @@ static void	ft_print_xattr(t_attr atr)
 	free(ptr);
 }
 
-void	ft_print_permissions(t_attr atr)
+static void	ft_print_permissions(t_attr atr)
 {
 	(atr.stats.st_mode & S_IRUSR) ? ft_printf("r") : ft_printf("-");
 	(atr.stats.st_mode & S_IWUSR) ? ft_printf("w") : ft_printf("-");
@@ -44,12 +44,12 @@ void	ft_print_permissions(t_attr atr)
 	(atr.stats.st_mode & S_IXOTH) ? ft_printf("x") : ft_printf("-");
 }
 
-void		ft_print_type(t_attr atr)
+static void	ft_print_type(t_attr atr)
 {
-	if (blk_print == 0)
+	if (g_blk_print == 0)
 	{
-		ft_printf("total %d\n", total);
-		blk_print = 1;
+		ft_printf("g_total %d\n", g_total);
+		g_blk_print = 1;
 	}
 	if (S_ISDIR(atr.stats.st_mode))
 		ft_printf("d");
@@ -68,14 +68,14 @@ void		ft_print_type(t_attr atr)
 
 int			ft_files(char *argv)
 {
-	if(g_flags.l == 1 && g_flags.one == 0)
+	if (g_flags.l == 1 && g_flags.one == 0)
 	{
 		if (ft_strstr(argv, "42/munki") != 0)
 		{
 			ft_printf("munkitools-2.4.0.2616.pkg\n");
 			return (0);
 		}
-		if (ft_strstr(argv, "intrav2cdn/") != 0 )
+		if (ft_strstr(argv, "intrav2cdn/") != 0)
 			return (0);
 	}
 	return (1);
@@ -98,10 +98,7 @@ void		ft_get_permissions(char *argv, t_col columns, t_attr atr)
 	ft_printf("%s", argv);
 	if (g_flags.l == 1 && g_flags.one == 0)
 		if (S_ISLNK(atr.stats.st_mode))
-		{
 			ft_printf(" -> %s", atr.buffer);
-			free(atr.buffer);
-		}
 	ft_printf("\n");
 	if (atr.xattr > 0 && g_flags.at == 1)
 		ft_print_xattr(atr);
