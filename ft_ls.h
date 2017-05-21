@@ -15,8 +15,8 @@
 
 # include "libft/libft.h"
 # include "libraries/ft_printf/ft_printf.h"
-# include "libraries/get_next_line/get_next_line.h"
 # include <sys/stat.h>
+# include <unistd.h>
 # include <dirent.h>
 # include <pwd.h>
 # include <grp.h>
@@ -99,8 +99,6 @@ size_t					ft_count_files(char *argv);
 /*
 ** print.c
 */
-void					ft_print(char *argv, char *parent,
-								int *printed, int width);
 t_col					ft_columns(char **argv, int argc, struct stat stats);
 
 /*

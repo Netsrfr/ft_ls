@@ -24,7 +24,7 @@ static void	ft_put_width(char *argv, unsigned short max, int pos, int width)
 			ft_printf(" ");
 }
 
-static void	ft_print(char *argv, char *parent, int *printed, int width)
+static void	ft_print_blk(char *argv, char *parent, int *printed, int width)
 {
 	struct stat	stats;
 	char		*path;
@@ -85,8 +85,8 @@ void		ft_scale_window(int argc, char **argv, struct winsize win, int i)
 		while (pos < win.ws_xpixel && (i + (height * pos)) < argc)
 		{
 			printed++;
-			ft_print(argv[i + (height * pos)], argv[0],
-					&printed, width);
+			ft_print_blk(argv[i + (height * pos)], argv[0],
+						 &printed, width);
 			ft_put_width(argv[i + height * pos], win.ws_ypixel, pos, width);
 			pos++;
 		}

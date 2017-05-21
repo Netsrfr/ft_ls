@@ -55,12 +55,10 @@ ftest: fclean library
 clean:
 	@make clean -C ./libft
 	@make clean -C ./libraries/ft_printf
-	@make clean -C ./libraries/get_next_line
 
 fclean: clean
 	@rm -f $(PUSH_SWAP) $(CHECKER) $(LIBRARY) a.out ft_ls
 	@make fclean -C ./libft
 	@make fclean -C ./libraries/ft_printf
-	@make fclean -C ./libraries/get_next_line
 
 o: fclean all
