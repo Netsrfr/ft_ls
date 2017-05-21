@@ -17,7 +17,6 @@ utility.c directories.c time.c scale.c
 
 LIBFT		=	./libft/libft.a
 PRINTF		=	./libraries/ft_printf/libftprintf.a
-GNL			=	./libraries/get_next_line/libgnl.a
 LIBLINK		=	-L ./libraries -lls
 LIBRARY		=	./libraries/libls.a
 
@@ -25,14 +24,14 @@ SRCS = $(C_FILES)
 
 C_FLAGS = -Wall -Werror -Wextra
 
-.PHONY: all library libft printf gnl test clean cleanmlx fclean o
+.PHONY: all library libft printf test clean cleanmlx fclean o
 
 all: library $(LS)
 
-library: libft printf gnl $(LIBRARY)
+library: libft printf $(LIBRARY)
 
 $(LIBRARY):
-	@libtool -static -o ./libraries/libls.a $(LIBFT) $(PRINTF) $(GNL)
+	@libtool -static -o ./libraries/libls.a $(LIBFT) $(PRINTF)
 
 libft: $(LIBFT)
 
@@ -43,11 +42,6 @@ printf: $(PRINTF)
 
 $(PRINTF):
 	@make -C ./libraries/ft_printf
-
-gnl: $(GNL)
-
-$(GNL):
-	@make -C ./libraries/get_next_line
 
 $(LS): $(C_FILES) ft_ls.h
 	@gcc $(C_FLAGS) $(LIBLINK) $(SRCS) -o ft_ls
