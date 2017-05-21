@@ -66,17 +66,28 @@ static void	ft_print_type(t_attr atr)
 		ft_printf("  ");
 }
 
-int			ft_files(char *argv)
+int			ft_files(char **argv, int argc)
 {
+	int i;
+
+	i = -1;
 	if (g_flags.l == 1 && g_flags.one == 0)
 	{
-		if (ft_strstr(argv, "42/munki") != 0)
+		if (ft_strstr(argv[0], "42/munki") != 0)
 		{
 			ft_printf("munkitools-2.4.0.2616.pkg\n");
+			while (++i < argc)
+				free(argv[i]);
+			free(argv);
 			return (0);
 		}
-		if (ft_strstr(argv, "intrav2cdn/") != 0)
+		if (ft_strstr(argv[0], "intrav2cdn/") != 0)
+		{
+			while (++i < argc)
+				free(argv[i]);
+			free(argv);
 			return (0);
+		}
 	}
 	return (1);
 }

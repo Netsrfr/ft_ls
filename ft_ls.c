@@ -28,8 +28,8 @@ static struct winsize	ft_max_width(char **argv, int argc, struct winsize win)
 		width = ft_strlen(argv[i]) > width ? ft_strlen(argv[i]) : width;
 		if (g_flags.s == 1)
 		{
-			path = ft_add_path(argv);
-			lstat(path, &stats);
+			lstat((path = ft_add_path(argv)), &stats);
+			free(path);
 			s = ft_mylog(stats.st_blocks) > s ? ft_mylog(stats.st_blocks) : s;
 		}
 		i++;
@@ -125,8 +125,6 @@ int						main(int argc, char **argv)
 	int				i;
 
 	ioctl(0, TIOCGWINSZ, &win);
-	if (ft_files(argv[0]) == 0)
-		return (0);
 	if (ft_strcmp(argv[0], "./ft_ls") == 0)
 	{
 		temp = ft_memalloc(sizeof(char *) * argc);
@@ -138,6 +136,8 @@ int						main(int argc, char **argv)
 		}
 		argv = temp;
 	}
+	if (ft_files(argv, argc) == 0)
+		return (0);
 	ft_parse_arg(argc, argv, win);
 	free(argv);
 	return (0);

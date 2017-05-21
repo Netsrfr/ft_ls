@@ -138,7 +138,7 @@ void					ft_print_error(char *argv);
 /*
 ** xattr.c
 */
-int						ft_files(char *argv);
+int						ft_files(char **argv, int argc);
 void					ft_get_permissions
 						(char *argv, t_col columns, t_attr atr);
 #endif

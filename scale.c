@@ -31,6 +31,7 @@ static void	ft_print_blk(char *argv, char *parent, int *printed, int width)
 
 	path = ft_add_path_single(parent, argv);
 	lstat(path, &stats);
+	free(path);
 	if (g_flags.a == 1 && argv[0] == '.')
 	{
 		if (g_flags.s == 1)
@@ -86,7 +87,7 @@ void		ft_scale_window(int argc, char **argv, struct winsize win, int i)
 		{
 			printed++;
 			ft_print_blk(argv[i + (height * pos)], argv[0],
-						 &printed, width);
+						&printed, width);
 			ft_put_width(argv[i + height * pos], win.ws_ypixel, pos, width);
 			pos++;
 		}
