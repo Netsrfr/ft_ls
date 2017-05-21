@@ -28,8 +28,12 @@ char	*ft_add_path(char **argv)
 {
 	char	*temp;
 
-	if (strcmp(argv[0], "./ft_ls") == 0 || argv[1][0] == '/')
+	if (ft_strcmp(argv[0], "./ft_ls") == 0 || argv[1][0] == '/')
 		temp = ft_strdup(argv[1]);
+//	else if (ft_strcmp(argv[1], "..") == 0)
+//		temp = ft_strdup("./../");
+	else if (ft_strncmp("..", argv[1], 2) == 0)
+		temp = ft_strjoin("/", argv[1]);
 	else
 	{
 		temp = ft_strjoin(argv[0], argv[1]);
@@ -41,8 +45,12 @@ char	*ft_add_path_single(char *argv0, char *argv1)
 {
 	char	*temp;
 
-	if (strcmp(argv0, "./ft_ls") == 0 || argv1[0] == '/')
+	if (ft_strcmp(argv0, "./ft_ls") == 0 || argv1[0] == '/')
 		temp = ft_strdup(argv1);
+//	else if (ft_strcmp(argv1, "..") == 0)
+//		temp = ft_strdup("../");
+	else if (ft_strncmp("..", argv1, 2) == 0)
+		temp = ft_strjoin("/", argv1);
 	else
 		temp = ft_strjoin(argv0, argv1);
 	return (temp);

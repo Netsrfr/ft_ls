@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-int		ft_get_arguments(char **argv, int *argc)
+int			ft_get_arguments(char **argv, int *argc)
 {
 	int		i;
 
@@ -39,7 +39,7 @@ int		ft_get_arguments(char **argv, int *argc)
 	return (1);
 }
 
-void	ft_clear_invalid(char **argv, int *argc, int i)
+void		ft_clear_invalid(char **argv, int *argc, int i)
 {
 	ft_print_error(argv[i]);
 	if (*argc == 2)
@@ -54,32 +54,43 @@ void	ft_clear_invalid(char **argv, int *argc, int i)
 	*argc = *argc - 1;
 }
 
-void	ft_args(char **argv, int *argc)
+static void	ft_handle_arg(char ***argv, int *argc, int i)
 {
 	struct stat	stats;
+
+	if (stat((*argv)[i], &stats) == -1)
+	{
+		ft_clear_invalid(*argv, argc, i);
+		i--;
+	}
+	if(ft_strcmp((*argv)[0], "./ft_ls") == 0 && ft_strcmp((*argv)[i], "..") == 0)
+	{
+		free((*argv)[i]);
+		(*argv)[i] = ft_strdup("../");
+	}
+	if ((stats.st_mode & S_IRUSR) == 0)
+		if ((stats.st_mode & S_IFMT) == S_IFDIR)
+		{
+			errno = 13;
+			ft_print_error((*argv)[i]);
+		}
+}
+
+void		ft_args(char **argv, int *argc)
+{
 	int			i;
 
 	i = 1;
 	ft_get_arguments(argv, argc);
 	while (i < *argc)
 	{
-		if (stat(argv[i], &stats) == -1)
-		{
-			ft_clear_invalid(argv, argc, i);
-			i--;
-		}
-		if ((stats.st_mode & S_IRUSR) == 0)
-			if ((stats.st_mode & S_IFMT) == S_IFDIR)
-			{
-				errno = 13;
-				ft_print_error(argv[i]);
-			}
+		ft_handle_arg(&argv, argc, i);
 		i++;
 	}
 	ft_sort_wrapper(&argv, *argc);
 }
 
-void	ft_next_arg(char **argv, int argc)
+void		ft_next_arg(char **argv, int argc)
 {
 	int	i;
 
