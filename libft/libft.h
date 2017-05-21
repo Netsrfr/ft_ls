@@ -100,7 +100,4 @@ char				*ft_itoa_base_unsigned(unsigned long long num, int base);
 char				*ft_strndup(const char *s1, size_t len);
 int					ft_sq_rt(int num);
 void				*ft_realloc(void *mem);
-unsigned long long int	ft_atoi_hex(char **str);
-
-
 #endif

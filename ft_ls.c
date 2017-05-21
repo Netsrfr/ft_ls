@@ -24,8 +24,8 @@ static struct winsize	ft_max_width(char **argv, int argc, struct winsize win)
 		width = ft_strlen(argv[i]) > width ? ft_strlen(argv[i]) : width;
 		i++;
 	}
-	win.ws_ypixel = (unsigned short)(width + 4);
-	width = (win.ws_col / (width + 4)) ? (win.ws_col / (width + 4)) : 1;
+	win.ws_ypixel = (unsigned short)(width + 5);
+	width = (win.ws_col / (width + 5)) ? (win.ws_col / (width + 5)) : 1;
 	win.ws_xpixel = (unsigned short)width;
 	return (win);
 }

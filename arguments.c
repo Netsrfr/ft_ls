@@ -63,7 +63,8 @@ static void	ft_handle_arg(char ***argv, int *argc, int i)
 		ft_clear_invalid(*argv, argc, i);
 		i--;
 	}
-	if(ft_strcmp((*argv)[0], "./ft_ls") == 0 && ft_strcmp((*argv)[i], "..") == 0)
+	if (ft_strcmp((*argv)[0], "./ft_ls") == 0 \
+		&& ft_strcmp((*argv)[i], "..") == 0)
 	{
 		free((*argv)[i]);
 		(*argv)[i] = ft_strdup("../");

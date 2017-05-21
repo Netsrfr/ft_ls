@@ -16,7 +16,7 @@ int	ft_hidden(char **argv, int argc)
 {
 	if (argv[1][0] == '.')
 	{
-		if (g_flags.a == 1 || argv[1][1] == '/'|| argv[1][2] == '/')
+		if (g_flags.a == 1 || argv[1][1] == '/' || argv[1][2] == '/')
 		{
 			if (ft_strcmp(argv[1], ".") == 0 || ft_strcmp(argv[1], "..") == 0)
 			{
@@ -40,7 +40,7 @@ int	ft_remove_hidden(char **argv, int argc)
 	i = 1;
 	while (i < argc)
 	{
-		if (argv[i][0] == '.' && argv[i][1] != '/' &&argv[i][2] != '/')
+		if (argv[i][0] == '.' && argv[i][1] != '/' && argv[i][2] != '/')
 		{
 			while (i < argc - 1)
 			{

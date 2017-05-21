@@ -58,7 +58,7 @@ void	ft_join(char **result, const char *s1, const char *s2)
 {
 	char	*temp;
 
-	temp	= *result;
+	temp = *result;
 	*result = ft_strjoin(s1, s2);
 	free(temp);
 }

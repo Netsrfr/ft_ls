@@ -13,7 +13,7 @@
 #include "libft.h"
 #define SI(x) (**str == x)
 
-long long int	ft_atoi(char **str)
+long long int			ft_atoi(char **str)
 {
 	int				neg;
 	long long int	result;
@@ -43,8 +43,8 @@ unsigned long long int	ft_atoi_hex(char **str)
 	unsigned long long int	result;
 
 	result = 0;
-		(*str)++;
-		(*str)++;
+	(*str)++;
+	(*str)++;
 	while ((**str >= '0' && **str <= '9') || (**str >= 'A' && **str <= 'F'))
 	{
 		result = result * 16;
