@@ -47,7 +47,7 @@ char	*ft_flags(char *progress, va_list arguments)
 	while (PR('+') || PR('-') || PR('#') || PR(' ') || PR('h') || PR('l')
 	|| PR('j') || PR('z') || PR('*') || (*progress >= '0' && *progress <= '9'))
 	{
-		if (*progress == '*')
+//		if (*progress == '*')
 			progress = ft_flags_star(progress, arguments);
 		if (*progress >= '1' && *progress <= '9')
 			progress = ft_flags_width(progress);
@@ -111,5 +111,6 @@ ssize_t	ft_printf(const char *format, ...)
 	va_start(arguments, format);
 	parser(format, arguments);
 	va_end(arguments);
+	free(g_print);
 	return (g_return);
 }

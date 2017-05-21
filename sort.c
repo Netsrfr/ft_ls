@@ -66,14 +66,10 @@ static void	ft_rqsort(char ***argv, int start, int size)
 
 static void	ft_rsort_optimize(char ***argv, int i, int size)
 {
-	char	***temp;
 	int		ch;
 	int		j;
 
 	ch = 126;
-	temp = ft_memalloc(sizeof(char **));
-	*temp = ft_memalloc(sizeof(char *) * size + 1);
-	(*temp)[0] = ft_strdup((*argv)[0]);
 	while (ch >= 32)
 	{
 		j = 1;
@@ -81,14 +77,13 @@ static void	ft_rsort_optimize(char ***argv, int i, int size)
 		{
 			if ((*argv)[j][0] == ch)
 			{
-				(*temp)[i] = ft_strdup((*argv)[j]);
+				ft_swap(argv, i, j);
 				i++;
 			}
 			j++;
 		}
 		ch--;
 	}
-	*argv = *temp;
 }
 
 void		ft_sort_wrapper(char ***argv, int size)
