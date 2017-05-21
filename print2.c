@@ -82,7 +82,7 @@ void		ft_print_contents_simple(int argc, char **argv)
 
 	i = 1;
 	ft_init_attributes(&atr, &columns);
-	if (g_flags.l == 1)
+	if (g_flags.l == 1 || g_flags.s == 1)
 		columns = ft_columns(argv, argc, atr.stats);
 	while (i < argc)
 	{

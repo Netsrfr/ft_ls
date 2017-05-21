@@ -42,12 +42,16 @@ char	*ft_flags_star(char *progress, va_list arguments)
 	return (progress);
 }
 
+/*
+** FLAG JZ Removed!!! Not needed for LS, add if needed.
+*/
+
 char	*ft_flags(char *progress, va_list arguments)
 {
 	while (PR('+') || PR('-') || PR('#') || PR(' ') || PR('h') || PR('l')
 	|| PR('j') || PR('z') || PR('*') || (*progress >= '0' && *progress <= '9'))
 	{
-//		if (*progress == '*')
+		if (*progress == '*')
 			progress = ft_flags_star(progress, arguments);
 		if (*progress >= '1' && *progress <= '9')
 			progress = ft_flags_width(progress);
@@ -65,8 +69,6 @@ char	*ft_flags(char *progress, va_list arguments)
 			progress = ft_flags_h(progress);
 		if (*progress == 'l')
 			progress = ft_flags_l(progress);
-		if (*progress == 'j' || *progress == 'z')
-			progress = ft_flags_jz(progress);
 	}
 	progress = ft_flags_precision(progress);
 	return (progress);

@@ -62,7 +62,6 @@ int		ft_conversion_s(char *argument)
 		temp = ft_strndup(argument, (size_t)g_fl.precision_v);
 	else
 		temp = ft_strdup(argument);
-	//free(argument);
 	ft_putwidth_string(g_fl.width_v, &temp);
 	//free(g_print);
 	g_print = ft_strdup(temp);

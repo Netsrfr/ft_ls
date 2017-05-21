@@ -70,7 +70,9 @@ void	ft_putwidth_string(int width, char **result)
 	}
 	while (width > strlen && g_fl.minus == 1)
 	{
+		temp = *result;
 		*result = ft_strjoin(*result, " ");
+		free(temp);
 		width--;
 	}
 }

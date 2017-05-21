@@ -51,3 +51,21 @@ char	*ft_add_path_single(char *argv0, char *argv1)
 		temp = ft_strjoin(argv0, argv1);
 	return (temp);
 }
+
+size_t	ft_count_files(char *argv)
+{
+	DIR		*dir;
+	size_t	count;
+
+	count = 1;
+	dir = opendir(argv);
+	while (dir != NULL)
+	{
+		if (readdir(dir) != NULL)
+			count++;
+		else
+			break ;
+	}
+	closedir(dir);
+	return (count);
+}

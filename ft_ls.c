@@ -14,16 +14,27 @@
 
 static struct winsize	ft_max_width(char **argv, int argc, struct winsize win)
 {
-	int		i;
-	size_t	width;
+	int			i;
+	char		*path;
+	size_t		width;
+	blkcnt_t	s;
+	struct stat	stats;
 
 	i = 1;
 	width = 0;
+	s = 0;
 	while (i < argc)
 	{
 		width = ft_strlen(argv[i]) > width ? ft_strlen(argv[i]) : width;
+		if (g_flags.s == 1)
+		{
+			path = ft_add_path(argv);
+			lstat(path, &stats);
+			s = ft_mylog(stats.st_blocks) > s ? ft_mylog(stats.st_blocks) : s;
+		}
 		i++;
 	}
+	width = g_flags.s == 1 ? width + s + 1 : width;
 	win.ws_ypixel = (unsigned short)(width + 5);
 	width = (win.ws_col / (width + 5)) ? (win.ws_col / (width + 5)) : 1;
 	win.ws_xpixel = (unsigned short)width;
@@ -97,7 +108,7 @@ static void				ft_parse_arg(int argc, char **argv, struct winsize win)
 		if (g_flags.one == 1 || g_flags.l == 1)
 			ft_print_contents_simple(argc, argv);
 		else
-			ft_scale_window(argc, argv, ft_max_width(argv, argc, win));
+			ft_scale_window(argc, argv, ft_max_width(argv, argc, win), 1);
 	}
 	if (argc >= 2)
 	{

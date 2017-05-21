@@ -12,25 +12,29 @@
 
 #include "ft_ls.h"
 
-size_t	ft_count_files(char *argv)
+static void	ft_ls_flags(char arg)
 {
-	DIR		*dir;
-	size_t	count;
-
-	count = 1;
-	dir = opendir(argv);
-	while (dir != NULL)
-	{
-		if (readdir(dir) != NULL)
-			count++;
-		else
-			break ;
-	}
-	closedir(dir);
-	return (count);
+	if (arg == 'l')
+		g_flags.l = 1;
+	else if (arg == 'R')
+		g_flags.re = 1;
+	else if (arg == 'a')
+		g_flags.a = 1;
+	else if (arg == 'r')
+		g_flags.r = 1;
+	else if (arg == 't')
+		g_flags.t = 1;
+	else if (arg == '1')
+		g_flags.one = 1;
+	else if (arg == '@')
+		g_flags.at = 1;
+	else if (arg == 's')
+		g_flags.s = 1;
+	else
+		ft_printf("flag '%c' invalid: resuming with valid flag(s)\n", arg);
 }
 
-void	ft_parse_flags(char *arg)
+void		ft_parse_flags(char *arg)
 {
 	int	i;
 
@@ -38,28 +42,12 @@ void	ft_parse_flags(char *arg)
 	g_flags.flag++;
 	while (arg[i])
 	{
-		if (arg[i] == 'l')
-			g_flags.l = 1;
-		else if (arg[i] == 'R')
-			g_flags.re = 1;
-		else if (arg[i] == 'a')
-			g_flags.a = 1;
-		else if (arg[i] == 'r')
-			g_flags.r = 1;
-		else if (arg[i] == 't')
-			g_flags.t = 1;
-		else if (arg[i] == '1')
-			g_flags.one = 1;
-		else if (arg[i] == '@')
-			g_flags.at = 1;
-		else
-			ft_printf("flag '%c' invalid: resuming with valid flag(s)\n", \
-			arg[i]);
+		ft_ls_flags(arg[i]);
 		i++;
 	}
 }
 
-void	ft_init_attributes(t_attr *attributes, t_col *columns)
+void		ft_init_attributes(t_attr *attributes, t_col *columns)
 {
 	attributes->xattr = 0;
 	attributes->acl = NULL;
@@ -69,7 +57,7 @@ void	ft_init_attributes(t_attr *attributes, t_col *columns)
 	columns->user = 0;
 }
 
-char	**ft_init_contents(char *argv)
+char		**ft_init_contents(char *argv)
 {
 	char	**contents;
 	size_t	count;
@@ -79,7 +67,7 @@ char	**ft_init_contents(char *argv)
 	return (contents);
 }
 
-void	ft_print_error(char *argv)
+void		ft_print_error(char *argv)
 {
 	char *err;
 

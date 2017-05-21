@@ -33,6 +33,7 @@ typedef struct			s_flag
 	int	a;
 	int	r;
 	int	t;
+	int s;
 	int	at;
 	int	one;
 	int start;
@@ -44,6 +45,7 @@ typedef struct			s_col
 	size_t	user;
 	size_t	group;
 	int		f_size;
+	int		b_size;
 }						t_col;
 
 typedef struct			s_attr
@@ -92,13 +94,13 @@ int						ft_remove_hidden(char **argv, int argc);
 void					ft_swap(char ***argv, int i, int j);
 char					*ft_add_path(char **argv);
 char					*ft_add_path_single(char *argv0, char *argv1);
+size_t					ft_count_files(char *argv);
 
 /*
 ** print.c
 */
-void					ft_print_scaled(char *argv, char *parent, int *printed);
-void					ft_scale_window
-						(int argc, char **argv, struct winsize win);
+void					ft_print(char *argv, char *parent,
+								int *printed, int width);
 t_col					ft_columns(char **argv, int argc, struct stat stats);
 
 /*
@@ -106,6 +108,12 @@ t_col					ft_columns(char **argv, int argc, struct stat stats);
 */
 void					ft_print_contents_simple(int argc, char **argv);
 void					ft_print_path(char **argv, char *path);
+
+/*
+** scale.c
+*/
+void					ft_scale_window
+		(int argc, char **argv, struct winsize win, int i);
 
 /*
 ** sort.c
@@ -124,7 +132,6 @@ char					*ft_time(time_t tse);
 /*
 ** utility.c
 */
-size_t					ft_count_files(char *argv);
 void					ft_parse_flags(char *arg);
 void					ft_init_attributes(t_attr *attributes, t_col *columns);
 char					**ft_init_contents(char *argv);

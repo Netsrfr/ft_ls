@@ -95,6 +95,12 @@ void		ft_get_permissions(char *argv, t_col columns, t_attr atr)
 		ft_printf("%s ", (file_time = ft_time(atr.stats.st_mtimespec.tv_sec)));
 		free(file_time);
 	}
+	if (g_flags.l == 0 && g_flags.s == 1 && g_blk_print == 0)
+	{
+		ft_printf("total %d\n", g_total);
+		g_blk_print = 1;
+		ft_printf("%-*d ", columns.b_size, atr.stats.st_blocks);
+	}
 	ft_printf("%s", argv);
 	if (g_flags.l == 1 && g_flags.one == 0)
 		if (S_ISLNK(atr.stats.st_mode))

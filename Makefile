@@ -13,7 +13,7 @@
 LS = ft_ls
 
 C_FILES = ft_ls.c path.c sort.c arguments.c hidden.c print.c print2.c xattr.c \
-utility.c directories.c time.c
+utility.c directories.c time.c scale.c
 
 LIBFT		=	./libft/libft.a
 PRINTF		=	./libraries/ft_printf/libftprintf.a
